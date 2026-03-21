@@ -1,0 +1,135 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Distribution / packaging
+.Python
+build/
+dist/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
+wheels/
+sdist/
+develop-eggs/
+lib/
+lib64/
+parts/
+var/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.env/
+virtualenv/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.env
+secrets.yaml
+secrets.yml
+secrets.toml
+*secrets*
+*credentials*
+
+# Config overrides (keep the template, ignore local overrides)
+config/settings.local.yaml
+config/settings.local.yml
+config/*.local.*
+
+# Type checkers & linters
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytype/
+.pyre/
+.ruff_cache/
+
+# Testing
+.pytest_cache/
+.cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+*.coveralls.json
+nosetests.xml
+test-results/
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# uv
+.uv/
+uv.lock
+
+# poetry
+poetry.lock
+
+# pipenv
+Pipfile.lock
+
+# Vector store persistence
+*.faiss
+*.index
+chroma/
+chromadb/
+qdrant_storage/
+weaviate_data/
+pinecone_cache/
+
+# Model weights & checkpoints
+*.bin
+*.pt
+*.pth
+*.safetensors
+*.gguf
+*.ckpt
+models/
+checkpoints/
+
+# Embeddings cache
+embeddings_cache/
+*.npy
+*.npz
+
+# Uploaded / processed documents
+data/raw/
+data/processed/
+data/chunks/
+uploads/
+
+# Logs & profiling
+*.log
+logs/
+*.prof
+*.lprof
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors & IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
