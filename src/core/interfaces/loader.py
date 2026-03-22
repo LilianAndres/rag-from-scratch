@@ -20,7 +20,7 @@ class BaseLoader(ABC):
         Parameters
         ----------
         source:
-            A file path, directory path, URL, or any other identifier that
+            A file path, directory path, or any other identifier that
             the concrete loader knows how to handle.
 
         Returns

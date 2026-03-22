@@ -6,10 +6,10 @@ from typing import Any
 class Document:
     """Represents a unit of text with associated metadata."""
 
+    id: str
     content: str
-    id: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def __repr__(self) -> str:
         preview = self.content[:80].replace("\n", " ")
-        return f"Document(id={self.doc_id!r}, preview={preview!r})"
+        return f"Document(id={self.id!r}, preview={preview!r})"
