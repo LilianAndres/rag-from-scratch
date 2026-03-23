@@ -13,7 +13,7 @@ class BaseLoader(ABC):
     """
 
     @abstractmethod
-    def load(self, source: str | Path) -> list[Document]:
+    def load(self, source: Path) -> list[Document]:
         """
         Load documents from *source*.
 

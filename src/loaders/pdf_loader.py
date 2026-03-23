@@ -4,9 +4,11 @@ from pathlib import Path
 import pymupdf
 
 from src.core.domain.document import Document
-from src.core.interfaces.loader import BaseLoader
+from src.loaders.loader import BaseLoader
+from src.registry.loader_registry import loader_registry
 
 
+@loader_registry.register("pdf")
 class PDFLoader(BaseLoader):
     """
     Loads PDF files into Document objects using PyMuPDF.
@@ -25,7 +27,7 @@ class PDFLoader(BaseLoader):
     def __init__(self, *, page_separator: str = "\n") -> None:
         self.page_separator = page_separator
 
-    def load(self, source: str | Path) -> list[Document]:
+    def load(self, source: Path) -> list[Document]:
         path = self._validate(source)
 
         with pymupdf.open(path) as doc:
@@ -70,8 +72,8 @@ class PDFLoader(BaseLoader):
             "subject": raw.get("subject") or None,
             "creator": raw.get("creator") or None,
             "producer": raw.get("producer") or None,
-            "creation_date": raw.get("creationDate") or None,
-            "modification_date": raw.get("modDate") or None,
+            "created_at": raw.get("creationDate") or None,
+            "updated_at": raw.get("modDate") or None,
         }
 
     def _page_to_document(self, page: pymupdf.Page, pdf_meta: dict) -> Document:
@@ -81,7 +83,7 @@ class PDFLoader(BaseLoader):
         text = self._extract_text(page)
         metadata = {
             **pdf_meta,
-            "page": page.number,          # 0-based
+            "page": page.number, # 0-based
             "page_label": page.number + 1, # human-friendly 1-based
         }
         doc_id = self._make_id(pdf_meta["source"], page.number)
@@ -97,8 +99,7 @@ class PDFLoader(BaseLoader):
 
         for block in blocks:
             # block layout: (x0, y0, x1, y1, text_or_None, block_no, block_type)
-            # block_type: 0 = text, 1 = image
-            block_type: int = block[6]
+            block_type: int = block[6] # block_type: 0 = text, 1 = image
             if block_type == 0:
                 text: str = block[4].strip()
                 if text:

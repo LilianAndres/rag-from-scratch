@@ -1,4 +1,4 @@
-from .loader import BaseLoader
+from src.loaders.loader import BaseLoader
 from .chunker import BaseChunker
 from .embedder import BaseEmbedder
 from .vectorstore import BaseVectorStore
