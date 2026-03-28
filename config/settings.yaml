@@ -1,0 +1,7 @@
+resolvers:
+  local:
+    base_path: /data/documents
+
+loaders:
+  pdf:
+    extract_images: false

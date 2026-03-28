@@ -1,27 +1,22 @@
-from typing import Callable, Dict, TypeVar, Type
-
-from src.meta.singleton_meta import SingletonMeta
+from typing import TypeVar, Generic
 
 
 T = TypeVar("T")
 
-class BaseRegistry(metaclass=SingletonMeta):
+class BaseRegistry(Generic[T]):
     """
     Generic registry mapping string keys to classes or callables.
     """
 
-    def __init__(self):
-        self._registry: Dict[str, Callable] = {}
+    def __init__(self) -> None:
+        self._registry: dict[str, T] = {}
 
-    def register(self, name: str):
-        def decorator(cls: Type[T]) -> Type[T]:
-            self._registry[name] = cls
-            return cls
-        return decorator
+    def register(self, name: str, instance: T) -> None:
+        self._registry[name] = instance
 
-    def get(self, name: str) -> Callable:
+    def get(self, name: str) -> T:
         if name not in self._registry:
-            raise ValueError(f"{name} is not registered")
+            raise ValueError(f"No component registered under '{name}'")
         return self._registry[name]
 
     def list(self) -> list[str]:

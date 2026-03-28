@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from src.loaders.loader import BaseLoader
-from src.registry.loader_registry import loader_registry
+from src.registry import BaseRegistry
 
 
 class DefaultLoaderManager:
@@ -9,13 +9,15 @@ class DefaultLoaderManager:
     Handles loading files into Document objects using registered loaders.
     """
 
+    def __init__(self, registry: BaseRegistry[BaseLoader]):
+        self.registry = registry
+
     def load(self, path: Path) -> list:
         loader_type = self._determine_loader_type(path)
-        loader_cls = loader_registry.get(loader_type)
-        if not loader_cls:
+        loader_instance = self.registry.get(loader_type)
+        if not loader_instance:
             raise ValueError(f"No loader registered for file type {loader_type}")
-        loader: BaseLoader = loader_cls()
-        return loader.load(path)
+        return loader_instance.load(path)
 
     def _determine_loader_type(self, path: Path) -> str:
         """

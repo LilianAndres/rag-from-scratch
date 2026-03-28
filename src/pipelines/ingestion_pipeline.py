@@ -35,14 +35,11 @@ class IngestionPipeline:
         """
         Resolve sources, load documents, then ingest them.
         """
-        all_documents: list[Document] = []
-
         for source in sources:
             path: Path = self.resolver.resolve(source)
-            docs: list[Document] = self.loader.load(path)
-            all_documents.extend(docs)
-
-        return self._ingest_documents(all_documents)
+            docs: list[Document] = self.loader.load(path) # load one source at a time
+            self._ingest_documents(docs) # document streaming
+        return None
 
     def _ingest_documents(self, documents: list[Document]) -> None:
         """
@@ -54,8 +51,10 @@ class IngestionPipeline:
         if not chunks:
             return None
 
-        embeddings: list[Embedding] = self.embedder.embed_chunks(chunks, self.model_name)
-
-        self.vectorstore.add_chunks(chunks, embeddings)
+        batch_size = 64 # chunk batching (memory-safe)
+        for i in range(0, len(chunks), batch_size):
+            batch = chunks[i:i + batch_size]
+            embeddings: list[Embedding] = self.embedder.embed_chunks(batch, self.model_name)
+            self.vectorstore.add_chunks(batch, embeddings)
 
         return None

@@ -1,13 +1,16 @@
 from pathlib import Path
 
-from src.registry.resolver_registry import resolver_registry
+from config.models import LocalResolverConfig
 from src.resolvers import BaseSourceResolver
 
 
-@resolver_registry.register("file")
 class LocalResolver(BaseSourceResolver):
+
+    def __init__(self, config: LocalResolverConfig) -> None:
+        self._base_path = Path(config.base_path)
+
     def resolve(self, source: str) -> Path:
-        path = Path(source)
+        path = self._base_path / source
         if not path.exists():
-            raise FileNotFoundError(f"Local file not found: {source}")
+            raise FileNotFoundError(f"Local file not found: {path}")
         return path

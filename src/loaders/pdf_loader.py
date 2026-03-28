@@ -3,12 +3,11 @@ from pathlib import Path
 
 import pymupdf
 
+from config.models import PDFLoaderConfig
 from src.core.domain.document import Document
 from src.loaders.loader import BaseLoader
-from src.registry.loader_registry import loader_registry
 
 
-@loader_registry.register("pdf")
 class PDFLoader(BaseLoader):
     """
     Loads PDF files into Document objects using PyMuPDF.
@@ -19,13 +18,12 @@ class PDFLoader(BaseLoader):
 
     Parameters
     ----------
-    page_separator : str
-        String inserted between text blocks within a single page.
-        Defaults to ``"\\n"``.
+    config : PDFLoaderConfig
+        Inherited configuration object.
     """
 
-    def __init__(self, *, page_separator: str = "\n") -> None:
-        self.page_separator = page_separator
+    def __init__(self, config: PDFLoaderConfig) -> None:
+        self.page_separator = config.page_separator
 
     def load(self, source: Path) -> list[Document]:
         path = self._validate(source)
