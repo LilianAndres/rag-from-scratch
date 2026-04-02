@@ -1,7 +1,13 @@
 resolvers:
   local:
-    base_path: /data/documents
+    base_path: /tmp
 
 loaders:
   pdf:
-    extract_images: false
+    page_separator: "\n"
+
+embedder:
+  provider: huggingface
+  huggingface:
+    model: BAAI/bge-small-en-v1.5
+    batch_size: 64
