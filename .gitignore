@@ -95,7 +95,7 @@ pinecone_cache/
 *.safetensors
 *.gguf
 *.ckpt
-models/
+/models/
 checkpoints/
 
 # Embeddings cache
