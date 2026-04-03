@@ -16,23 +16,6 @@ class BaseVectorStore(ABC):
     """
 
     @abstractmethod
-    def add_embeddings(self, embeddings: List[Embedding]) -> List[str]:
-        """
-        Index a batch of embeddings associated with chunks.
-
-        Parameters
-        ----------
-        embeddings : List[Embedding]
-            Embeddings to store, each linked to a Chunk ID.
-
-        Returns
-        -------
-        List[str]
-            The chunk IDs assigned/confirmed by the store, in the same order.
-        """
-        pass
-
-    @abstractmethod
     def add_chunks(self, chunks: List[Chunk], embeddings: List[Embedding]) -> List[str]:
         """
         Convenience method: store chunks and their embeddings together.
