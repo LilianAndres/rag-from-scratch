@@ -67,10 +67,11 @@ class ChromaVectorStore(BaseVectorStore):
         Flatten chunk metadata to a Chroma-compatible dict.
         Chroma only accepts str, int, float, bool values — no nested objects.
         """
-        return {
+        raw = {
             "document_id": chunk.document_id,
-            "index": chunk.index,
+            **chunk.metadata,
         }
+        return {k: v for k, v in raw.items() if v is not None}
 
     @staticmethod
     def _distance_to_score(distance: float, metadata: dict) -> float:
