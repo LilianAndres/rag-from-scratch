@@ -39,24 +39,10 @@ class BM25Retriever(BaseRetriever):
 
     @staticmethod
     def _build_index(vectorstore: BaseVectorStore) -> tuple[list[dict], BM25Okapi]:
-        """
-        Pull every chunk from Chroma and build a BM25 index over their content.
-        """
-        # Access the underlying Chroma collection directly
-        collection = vectorstore._collection
-        result = collection.get(include=["documents", "metadatas"])
-
         chunks = [
-            {
-                "id": chunk_id,
-                "content": content,
-                "metadata": dict(metadata),
-            }
-            for chunk_id, content, metadata in zip(
-                result["ids"], result["documents"], result["metadatas"]
-            )
+            {"id": chunk_id, "content": content, "metadata": metadata}
+            for chunk_id, content, metadata in vectorstore.get_all_chunks()
         ]
-
         tokenized_corpus = [BM25Retriever._tokenize(chunk["content"]) for chunk in chunks]
         return chunks, BM25Okapi(tokenized_corpus)
 

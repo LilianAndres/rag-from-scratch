@@ -22,10 +22,7 @@ vectorstore:
 retriever:
   provider: hybrid
   vector:
-    top_k: 5
     score_threshold: null
-  bm25:
-    top_k: 5
   hybrid:
     top_k: 5
-    fetch_k: 20
+    fetch_k: 20 # overrides the top_k of vector and bm25 retrievers

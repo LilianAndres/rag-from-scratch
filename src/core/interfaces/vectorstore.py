@@ -64,3 +64,10 @@ class BaseVectorStore(ABC):
             IDs of the chunks to remove.
         """
         pass
+
+    @abstractmethod
+    def get_all_chunks(self) -> list[tuple[str, str, dict]]:
+        """
+        Return all stored chunks as (id, content, metadata) tuples.
+        Used by in-memory retrievers (e.g. BM25) to build their index.
+        """

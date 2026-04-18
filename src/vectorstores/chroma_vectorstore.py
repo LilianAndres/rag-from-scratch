@@ -61,6 +61,15 @@ class ChromaVectorStore(BaseVectorStore):
     def delete(self, chunk_ids: list[str]) -> None:
         self._collection.delete(ids=chunk_ids)
 
+    def get_all_chunks(self) -> list[tuple[str, str, dict]]:
+        result = self._collection.get(include=["documents", "metadatas"])
+        return [
+            (chunk_id, content, dict(metadata))
+            for chunk_id, content, metadata in zip(
+                result["ids"], result["documents"], result["metadatas"]
+            )
+        ]
+
     @staticmethod
     def _chunk_metadata(chunk: Chunk) -> dict:
         """
