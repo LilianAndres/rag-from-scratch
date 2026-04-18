@@ -6,7 +6,13 @@ from pydantic_settings import (
     EnvSettingsSource,
 )
 
-from config.models import ResolverConfig, LoaderConfig, EmbedderConfig, VectorStoreConfig
+from config.models import (
+    ResolverConfig,
+    LoaderConfig,
+    EmbedderConfig,
+    VectorStoreConfig,
+    RetrieverConfig,
+)
 
 
 class AppSettings(BaseSettings):
@@ -16,6 +22,7 @@ class AppSettings(BaseSettings):
     loaders: LoaderConfig
     embedder: EmbedderConfig
     vectorstore: VectorStoreConfig
+    retriever: RetrieverConfig
 
     @classmethod
     def settings_customise_sources(

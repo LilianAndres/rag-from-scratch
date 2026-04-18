@@ -18,3 +18,14 @@ vectorstore:
     persist_directory: .chroma
     collection_name: rag_collection
     distance_function: cosine
+
+retriever:
+  provider: hybrid
+  vector:
+    top_k: 5
+    score_threshold: null
+  bm25:
+    top_k: 5
+  hybrid:
+    top_k: 5
+    fetch_k: 20

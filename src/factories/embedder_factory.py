@@ -6,15 +6,15 @@ class EmbedderFactory:
     def __init__(self, config: EmbedderConfig) -> None:
         self._config = config
 
-    def make_embedder(self) -> BaseEmbedder:
+    def create_embedder(self) -> BaseEmbedder:
         match self._config.provider:
             case "openai":
                 from src.embedders.openai_embedder import OpenAIEmbedder
-                return OpenAIEmbedder(config.openai)
+                return OpenAIEmbedder(self._config.openai)
 
             case "huggingface":
                 from src.embedders.huggingface_embedder import HuggingFaceEmbedder
-                return HuggingFaceEmbedder(config.huggingface)
+                return HuggingFaceEmbedder(self._config.huggingface)
 
             case _:
-                raise ValueError(f"Unknown embedder provider: '{config.provider!r}'")
+                raise ValueError(f"Unknown embedder provider: '{self._config.provider!r}'")
