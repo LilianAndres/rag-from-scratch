@@ -29,9 +29,9 @@ def create_backend(config: BackendConfig, embedder: BaseEmbedder) -> SearchBacke
             if config.hybrid is None:
                 raise ValueError("Missing hybrid config")
 
-            sub_backends = [create_backend(sub_config, embedder) for sub_config in config.backends]
+            sub_backends = [create_backend(sub_config, embedder) for sub_config in config.hybrid.backends]
 
-            return HybridBackend(backends=sub_backends, rrf_k=config.rrf_k)
+            return HybridBackend(backends=sub_backends, rrf_k=config.hybrid.rrf_k)
 
         case _:
             raise ValueError(f"Unknown backend type: {config.type!r}")
