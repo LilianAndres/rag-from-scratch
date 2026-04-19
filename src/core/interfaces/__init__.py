@@ -5,6 +5,7 @@ from .vectorstore import BaseVectorStore
 from .retriever import BaseRetriever
 from .reranker import BaseReranker
 from .generator import BaseGenerator
+from .backend import SearchBackend
 
 __all__ = [
     "BaseLoader",
@@ -14,4 +15,5 @@ __all__ = [
     "BaseRetriever",
     "BaseReranker",
     "BaseGenerator",
+    "SearchBackend",
 ]

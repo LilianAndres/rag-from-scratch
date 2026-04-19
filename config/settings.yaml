@@ -12,17 +12,14 @@ embedder:
     model: BAAI/bge-small-en-v1.5
     batch_size: 64
 
-vectorstore:
-  provider: chroma
-  chroma:
-    persist_directory: .chroma
-    collection_name: rag_collection
-    distance_function: cosine
-
-retriever:
-  provider: hybrid
-  vector:
-    score_threshold: null
-  hybrid:
-    top_k: 5
-    fetch_k: 20 # overrides the top_k of vector and bm25 retrievers
+backend:
+   type: hybrid
+   rrf_k: 60
+   backends:
+     - type: chroma
+       host: localhost
+       port: 8000
+       collection_name: documents
+     - type: elk_sparse
+       hosts: ["http://localhost:9200"]
+       index_name: documents

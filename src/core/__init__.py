@@ -3,8 +3,7 @@ from src.core.domain import Chunk
 
 from src.core.embeddings import Embedding
 
-from src.core.retrieval import Query
-from src.core.retrieval import RetrievedChunk, RetrievalResult
+from src.core.search import SearchQuery, SearchResult
 
 from src.core.generation import GenerationResult
 
@@ -20,9 +19,8 @@ __all__ = [
     "Document",
     "Chunk",
     "Embedding",
-    "Query",
-    "RetrievedChunk",
-    "RetrievalResult",
+    "SearchQuery",
+    "SearchResult",
     "GenerationResult",
     "BaseLoader",
     "BaseChunker",

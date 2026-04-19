@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from src.core.retrieval.result import RetrievedChunk
+from src.core.search.result import RetrievedChunk
 from src.core.domain import Document, Chunk
 from src.core.embeddings.embedding import Embedding
 
