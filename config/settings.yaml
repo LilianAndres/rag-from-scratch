@@ -13,13 +13,17 @@ embedder:
     batch_size: 64
 
 backend:
-   type: hybrid
-   rrf_k: 60
-   backends:
-     - type: chroma
-       host: localhost
-       port: 8000
-       collection_name: documents
-     - type: elk_sparse
-       hosts: ["http://localhost:9200"]
-       index_name: documents
+  type: hybrid
+  hybrid:
+    rrf_k: 60
+    backends:
+      - type: chroma
+        chroma:
+          host: localhost
+          port: 8000
+          collection_name: documents
+
+      - type: elk
+        elk:
+          hosts: ["http://localhost:9200"]
+          index_name: documents
