@@ -1,5 +1,5 @@
 from typing import Literal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 
 
 class ChromaConfig(BaseModel):
@@ -10,6 +10,8 @@ class ChromaConfig(BaseModel):
 
 class ELKConfig(BaseModel):
     hosts: list[str] = Field(default_factory=lambda: ["http://localhost:9200"])
+    username: str | None = None
+    password: SecretStr | None = None
     index_name: str = "documents"
 
 class HybridConfig(BaseModel):

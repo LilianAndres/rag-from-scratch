@@ -6,7 +6,7 @@ class OpenAIGeneratorConfig(BaseModel):
     temperature: float = 0.0
     max_tokens: int = 1024
     prompt_template: str = "rag.j2"
-    api_key: SecretStr = Field(validation_alias="OPENAI_API_KEY")
+    api_key: SecretStr
 
 
 class OllamaGeneratorConfig(BaseModel):

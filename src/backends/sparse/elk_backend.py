@@ -25,7 +25,14 @@ class ELKBackend(SearchBackend):
     """
 
     def __init__(self, config: ELKConfig) -> None:
-        self._client = AsyncElasticsearch(config.hosts)
+        self._client = AsyncElasticsearch(
+            hosts=config.hosts,
+            basic_auth=(
+                (config.username, config.password.get_secret_value())
+                if config.username and config.password
+                else None
+            ),
+        )
         self._config = config
 
     async def _ensure_index(self) -> None:
