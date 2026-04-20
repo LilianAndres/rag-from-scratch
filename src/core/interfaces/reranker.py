@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.core import RetrievedChunk
+from src.core import SearchResult
 
 
 class BaseReranker(ABC):
@@ -8,12 +8,12 @@ class BaseReranker(ABC):
     Abstract base class for rerankers.
 
     A reranker takes a query and an initial candidate list produced by a
-    BaseRetriever and returns a re-scored, re-ordered list that is better
+    SearchBackend and returns a re-scored, re-ordered list that is better
     calibrated to the query's intent.
     """
 
     @abstractmethod
-    def rerank(self, query: str, chunks: list[RetrievedChunk], top_n: int | None = None) -> list[RetrievedChunk]:
+    def rerank(self, query: str, chunks: list[SearchResult], top_n: int | None = None) -> list[SearchResult]:
         """
         Re-score and re-order *chunks* with respect to *query*.
 
@@ -29,7 +29,7 @@ class BaseReranker(ABC):
 
         Returns
         -------
-        list[RetrievedChunk]
+        list[SearchResult]
             Chunks sorted by descending reranker score. chunk.score
             should be updated to reflect the new score.
         """

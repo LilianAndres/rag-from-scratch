@@ -10,8 +10,6 @@ from src.core.generation import GenerationResult
 from src.core.interfaces import BaseLoader
 from src.core.interfaces import BaseChunker
 from src.core.interfaces import BaseEmbedder
-from src.core.interfaces import BaseVectorStore
-from src.core.interfaces import BaseRetriever
 from src.core.interfaces import BaseReranker
 from src.core.interfaces import BaseGenerator
 
@@ -25,8 +23,6 @@ __all__ = [
     "BaseLoader",
     "BaseChunker",
     "BaseEmbedder",
-    "BaseVectorStore",
-    "BaseRetriever",
     "BaseReranker",
     "BaseGenerator",
 ]

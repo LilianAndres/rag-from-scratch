@@ -10,7 +10,8 @@ from config.models import (
     ResolverConfig,
     LoaderConfig,
     EmbedderConfig,
-    BackendConfig
+    BackendConfig,
+    GeneratorConfig,
 )
 
 
@@ -21,6 +22,7 @@ class AppSettings(BaseSettings):
     loaders: LoaderConfig
     embedder: EmbedderConfig
     backend: BackendConfig
+    generator: GeneratorConfig
 
     @classmethod
     def settings_customise_sources(

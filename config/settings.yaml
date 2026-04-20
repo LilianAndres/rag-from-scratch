@@ -27,3 +27,14 @@ backend:
         elk:
           hosts: ["http://localhost:9200"]
           index_name: documents
+
+generator:
+  provider: ollama
+  prompts_dir: src/prompts
+  ollama:
+    model: llama3
+    base_url: http://localhost:11434
+    temperature: 0.0
+    max_tokens: 1024
+    prompt_template: rag.j2
+    timeout: 120.0

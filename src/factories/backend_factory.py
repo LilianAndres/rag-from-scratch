@@ -1,37 +1,47 @@
-from config.models.backend import BackendConfig, HybridConfig
+from config.models.backend import BackendConfig
 
 from src.core.interfaces.backend import SearchBackend
 from src.core.interfaces.embedder import BaseEmbedder
 
 
-def create_backend(config: BackendConfig, embedder: BaseEmbedder) -> SearchBackend:
-    match config.type:
+class BackendFactory:
+    def __init__(self, config: BackendConfig) -> None:
+        self._config = config
 
-        case "chroma":
-            from src.backends.dense.chroma_backend import ChromaBackend
+    def create_backend(self, embedder: BaseEmbedder) -> SearchBackend:
+        match self._config.type:
 
-            if config.chroma is None:
-                raise ValueError("Missing chroma config")
+            case "chroma":
+                from src.backends.dense.chroma_backend import ChromaBackend
 
-            return ChromaBackend(config=config.chroma, embedder=embedder)
+                if self._config.chroma is None:
+                    raise ValueError("Missing chroma config")
 
-        case "elk":
-            from src.backends.sparse.elk_backend import ELKBackend
+                return ChromaBackend(config=self._config.chroma, embedder=embedder)
 
-            if config.elk is None:
-                raise ValueError("Missing ELK config")
+            case "elk":
+                from src.backends.sparse.elk_backend import ELKBackend
 
-            return ELKBackend(config=config.elk)
+                if self._config.elk is None:
+                    raise ValueError("Missing ELK config")
 
-        case "hybrid":
-            from src.backends.hybrid_backend import HybridBackend
+                return ELKBackend(config=self._config.elk)
 
-            if config.hybrid is None:
-                raise ValueError("Missing hybrid config")
+            case "hybrid":
+                from src.backends.hybrid_backend import HybridBackend
 
-            sub_backends = [create_backend(sub_config, embedder) for sub_config in config.hybrid.backends]
+                if self._config.hybrid is None:
+                    raise ValueError("Missing hybrid config")
 
-            return HybridBackend(backends=sub_backends, rrf_k=config.hybrid.rrf_k)
+                sub_backends = [
+                    BackendFactory(sub_config).create_backend(embedder)
+                    for sub_config in self._config.hybrid.backends
+                ]
 
-        case _:
-            raise ValueError(f"Unknown backend type: {config.type!r}")
+                return HybridBackend(
+                    backends=sub_backends,
+                    rrf_k=self._config.hybrid.rrf_k
+                )
+
+            case _:
+                raise ValueError(f"Unknown backend type: {self._config.type!r}")

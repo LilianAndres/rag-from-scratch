@@ -1,0 +1,15 @@
+You are a helpful assistant that answers questions based strictly on the provided context.
+If the answer cannot be found in the context, say so clearly. Do not make anything up.
+
+## Context
+
+{% for result in context %}
+### Source {{ loop.index }} (score: {{ "%.3f"|format(result.score) }})
+{{ result.chunk.content }}
+{% endfor %}
+
+## Question
+
+{{ query }}
+
+## Answer

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.core import RetrievedChunk, GenerationResult
+from src.core import GenerationResult, SearchResult
 
 
 class BaseGenerator(ABC):
@@ -12,7 +12,7 @@ class BaseGenerator(ABC):
     """
 
     @abstractmethod
-    def generate(self, query: str, context: list[RetrievedChunk]) -> GenerationResult:
+    def generate(self, query: str, context: list[SearchResult]) -> GenerationResult:
         """
         Generate an answer for *query* grounded in *context*.
 
