@@ -12,6 +12,7 @@ from config.models import (
     EmbedderConfig,
     BackendConfig,
     GeneratorConfig,
+    RerankerConfig,
 )
 
 
@@ -23,6 +24,7 @@ class AppSettings(BaseSettings):
     embedder: EmbedderConfig
     backend: BackendConfig
     generator: GeneratorConfig
+    reranker: RerankerConfig
 
     @classmethod
     def settings_customise_sources(

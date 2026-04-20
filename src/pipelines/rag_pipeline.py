@@ -18,10 +18,10 @@ class RAGPipeline:
         self.reranker = reranker
         self.generator = generator
 
-    async def run(self, query: SearchQuery) -> GenerationResult:
+    async def run(self, query: SearchQuery, top_n: int | None = None) -> GenerationResult:
         results= await self.backend.search(query)
 
-        if self.reranker:
-            results = self.reranker.rerank(query.text, results)
+        if self.reranker is not None:
+            results = self.reranker.rerank(query.text, results, top_n)
 
         return self.generator.generate(query.text, results)

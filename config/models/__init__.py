@@ -3,6 +3,7 @@ from .resolver import ResolverConfig
 from .embedder import EmbedderConfig
 from .backend import BackendConfig
 from .generator import GeneratorConfig
+from .reranker import RerankerConfig
 
 __all__ = [
     "LoaderConfig",
@@ -10,4 +11,5 @@ __all__ = [
     "EmbedderConfig",
     "BackendConfig",
     "GeneratorConfig",
+    "RerankerConfig",
 ]
