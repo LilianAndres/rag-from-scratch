@@ -114,7 +114,7 @@ class ChromaBackend(SearchBackend):
 
         match space:
             case "cosine":
-                return 1.0 - distance / 2.0
+                return 1.0 - distance
             case "l2":
                 return 1.0 / (1.0 + distance)
             case "ip":

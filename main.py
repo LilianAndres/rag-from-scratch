@@ -14,7 +14,7 @@ async def run() -> None:
     print("Ingestion complete.")
 
     rag = factory.create_rag_pipeline()
-    query = SearchQuery(text="What is this document about?")
+    query = SearchQuery(text="How does scaled dot-product attention work?")
     result = await rag.run(query)
 
     print(f"\nAnswer:\n{result.answer}")

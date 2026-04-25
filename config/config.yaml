@@ -7,7 +7,7 @@ llms:
         base_url: http://localhost:11434
         temperature: 0.0
         max_tokens: 512
-        timeout: 120.0
+        timeout: 360.0
 
 resolvers:
   local:
@@ -20,8 +20,8 @@ loaders:
 chunker:
   provider: recursive
   recursive:
-    chunk_size: 400
-    chunk_overlap: 50
+    chunk_size: 800
+    chunk_overlap: 100
     separators: null
 
 embedder:
@@ -29,7 +29,7 @@ embedder:
   infinity:
     base_url: http://localhost:7997
     model: BAAI/bge-small-en-v1.5
-    timeout: 30.0
+    timeout: 60.0
 
 backend:
   type: chroma
@@ -46,7 +46,7 @@ reranker:
     base_url: http://localhost:7997
     model: cross-encoder/ms-marco-MiniLM-L-6-v2
     top_n: 5
-    timeout: 30.0
+    timeout: 60.0
 
 generator:
   llm_profile: fast
