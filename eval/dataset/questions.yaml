@@ -1,0 +1,30 @@
+questions:
+  - question: "What is the Transformer model?"
+    ground_truth: "The Transformer is a model architecture that relies entirely on attention mechanisms, dispensing with recurrence and convolutions entirely."
+
+  - question: "What attention mechanism does the Transformer use?"
+    ground_truth: "The Transformer uses scaled dot-product attention and multi-head attention mechanisms."
+
+  - question: "How many layers does the Transformer encoder have?"
+    ground_truth: "The Transformer encoder is composed of 6 identical layers."
+
+  - question: "What optimizer was used to train the Transformer?"
+    ground_truth: "The Adam optimizer was used with beta1=0.9, beta2=0.98, and epsilon=1e-9."
+
+  - question: "What is the purpose of positional encoding?"
+    ground_truth: "Positional encoding injects information about the relative or absolute position of tokens in the sequence since the model contains no recurrence or convolution."
+
+  - question: "What dropout rate was applied during training?"
+    ground_truth: "A dropout rate of 0.1 was applied to the output of each sub-layer and to the embeddings."
+
+  - question: "What is multi-head attention?"
+    ground_truth: "Multi-head attention linearly projects queries, keys and values h times with different learned projections, performs attention in parallel, then concatenates and projects the results."
+
+  - question: "What tasks was the Transformer evaluated on?"
+    ground_truth: "The Transformer was evaluated on English-to-German and English-to-French machine translation tasks."
+
+  - question: "What is the BLEU score of the Transformer on English-to-German translation?"
+    ground_truth: "The Transformer achieved a BLEU score of 28.4 on the WMT 2014 English-to-German translation task."
+
+  - question: "Why does the Transformer use scaled dot-product attention?"
+    ground_truth: "Scaling by the square root of the dimension of the keys prevents the dot products from growing too large in magnitude, which would push softmax into regions with very small gradients."

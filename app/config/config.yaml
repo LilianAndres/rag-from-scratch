@@ -47,7 +47,7 @@ reranker:
     model: cross-encoder/ms-marco-MiniLM-L-6-v2
     top_n: 5
     timeout: 60.0
-
+o
 generator:
   llm_profile: fast
   prompts_dir: app/src/prompts

@@ -11,10 +11,16 @@ from app.config.models import (
 )
 
 CONFIG_PATH = Path(__file__).parent / "config.yaml"
+ROOT_ENV = Path(__file__).parent.parent / ".env"
+
 
 
 class AppSettings(BaseSettings):
-    model_config = SettingsConfigDict(env_nested_delimiter="__", env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_nested_delimiter="__",
+        env_file=str(ROOT_ENV),
+        env_file_encoding="utf-8",
+    )
 
     resolvers: ResolverConfig
     loaders: LoaderConfig

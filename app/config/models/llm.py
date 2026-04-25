@@ -1,11 +1,11 @@
-from pydantic import BaseModel, Field, SecretStr
+from pydantic import BaseModel, SecretStr
 
 
 class OpenAIProfileConfig(BaseModel):
     model: str = "gpt-4o-mini"
     temperature: float = 0.0
     max_tokens: int = 1024
-    api_key: SecretStr = Field(validation_alias="OPENAI_API_KEY")
+    api_key: SecretStr
 
 
 class OllamaProfileConfig(BaseModel):
