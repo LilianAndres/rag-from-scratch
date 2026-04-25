@@ -65,4 +65,5 @@ class BaseEmbedder(ABC):
         List[float]
             The embedding vector for the query.
         """
-        return self.embed_texts([query])[0]
+        results = await self.embed_texts([query])
+        return results[0]

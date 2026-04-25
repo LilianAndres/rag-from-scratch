@@ -10,7 +10,7 @@ async def run() -> None:
     factory = ApplicationFactory(settings)
 
     ingestion = factory.create_ingestion_pipeline()
-    await ingestion.ingest(["file://data/sample.pdf"])
+    await ingestion.ingest(["file://sample.pdf"])
     print("Ingestion complete.")
 
     rag = factory.create_rag_pipeline()

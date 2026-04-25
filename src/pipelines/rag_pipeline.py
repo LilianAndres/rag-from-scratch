@@ -1,8 +1,7 @@
-from src.core.interfaces import BaseQueryExpander, BaseQueryTransformer
+from src.core.interfaces import BaseQueryTransformer
 from src.core.interfaces.backend import SearchBackend
 from src.core.interfaces.reranker import BaseReranker
 from src.core.interfaces.generator import BaseGenerator
-from src.core.search import SearchResult
 from src.core.search.search_query import SearchQuery
 from src.core.generation.generation_result import GenerationResult
 
@@ -32,6 +31,6 @@ class RAGPipeline:
             results.extend(result)
 
         if self.reranker is not None:
-            results = self.reranker.rerank(query.text, results, top_n)
+            results = await self.reranker.rerank(query.text, results, top_n)
 
         return self.generator.generate(query.text, results)

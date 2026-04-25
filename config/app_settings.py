@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from pydantic_settings import (
     BaseSettings, SettingsConfigDict, PydanticBaseSettingsSource,
     YamlConfigSettingsSource, EnvSettingsSource,
@@ -7,6 +9,8 @@ from config.models import (
     ResolverConfig, LoaderConfig, ChunkerConfig, EmbedderConfig, BackendConfig,
     GeneratorConfig, RerankerConfig, LLMsConfig, QueryTransformerConfig,
 )
+
+CONFIG_PATH = Path(__file__).parent / "config.yaml"
 
 
 class AppSettings(BaseSettings):
@@ -30,5 +34,5 @@ class AppSettings(BaseSettings):
     ) -> tuple[PydanticBaseSettingsSource, ...]:
         return (
             EnvSettingsSource(settings_cls), # highest priority
-            YamlConfigSettingsSource(settings_cls, yaml_file="config.yaml"),
+            YamlConfigSettingsSource(settings_cls, yaml_file=CONFIG_PATH),
         )

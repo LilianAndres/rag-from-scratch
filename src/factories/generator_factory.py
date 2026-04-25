@@ -1,8 +1,8 @@
 from config.models.generator import GeneratorConfig
-from src.core.generation import RAGGenerator
 from src.core.interfaces import BaseLanguageModel
 from src.core.interfaces.generator import BaseGenerator
 from src.core.prompts.prompt_loader import PromptLoader
+from src.generators import RAGGenerator
 
 
 class GeneratorFactory:

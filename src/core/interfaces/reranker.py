@@ -13,7 +13,7 @@ class BaseReranker(ABC):
     """
 
     @abstractmethod
-    def rerank(self, query: str, chunks: list[SearchResult], top_n: int | None = None) -> list[SearchResult]:
+    async def rerank(self, query: str, chunks: list[SearchResult], top_n: int | None = None) -> list[SearchResult]:
         """
         Re-score and re-order *chunks* with respect to *query*.
 

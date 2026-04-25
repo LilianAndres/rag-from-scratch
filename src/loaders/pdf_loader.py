@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pymupdf
 
-from config.models import PDFLoaderConfig
+from config.models.loader import PDFLoaderConfig
 from src.core.domain.document import Document
 from src.loaders.loader import BaseLoader
 

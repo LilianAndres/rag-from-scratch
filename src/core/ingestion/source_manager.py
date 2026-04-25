@@ -19,6 +19,7 @@ class DefaultSourceManager:
         resolver_instance = self.registry.get(resolver_type)
         if not resolver_instance:
             raise ValueError(f"No resolver registered for type {resolver_type}")
+        source = self._strip_scheme(source)
         return resolver_instance.resolve(source)
 
     def _determine_resolver_type(self, source: str) -> str:
@@ -28,3 +29,9 @@ class DefaultSourceManager:
         if source.startswith("s3://"):
             return "s3"
         return "file"
+
+    def _strip_scheme(self, source: str) -> str:
+        for scheme in ("s3://", "file://"):
+            if source.startswith(scheme):
+                return source[len(scheme):]
+        return source

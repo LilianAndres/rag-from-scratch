@@ -1,4 +1,4 @@
-from recursive_chunker import RecursiveChunker
+from .recursive_chunker import RecursiveChunker
 
 
 __all__ = ["RecursiveChunker"]

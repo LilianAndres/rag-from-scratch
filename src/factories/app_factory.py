@@ -35,8 +35,8 @@ class ApplicationFactory:
         return LLMFactory(config).create_llm()
 
     def create_ingestion_pipeline(self) -> IngestionPipeline:
-        resolver_registry = ResolverFactory(self.settings.resolver).build_registry()
-        loader_registry = LoaderFactory(self.settings.loader).build_registry()
+        resolver_registry = ResolverFactory(self.settings.resolvers).build_registry()
+        loader_registry = LoaderFactory(self.settings.loaders).build_registry()
         chunker = ChunkerFactory(self.settings.chunker).create_chunker()
         embedder = self._get_embedder()
         backend = BackendFactory(self.settings.backend).create_backend(embedder)

@@ -17,13 +17,14 @@ class InfinityEmbedder(BaseEmbedder):
         if not texts:
             return []
 
-        response = httpx.post(
-            f"{self._config.base_url}/embeddings",
-            json={"input": texts, "model": self._config.model},
-            timeout=self._config.timeout,
-        )
-        response.raise_for_status()
-        data = response.json()
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{self._config.base_url}/embeddings",
+                json={"input": texts, "model": self._config.model},
+                timeout=self._config.timeout,
+            )
+            response.raise_for_status()
+            data = response.json()
 
-        ordered = sorted(data["data"], key=lambda item: item["index"])
-        return [item["embedding"] for item in ordered]
+            ordered = sorted(data["data"], key=lambda item: item["index"])
+            return [item["embedding"] for item in ordered]

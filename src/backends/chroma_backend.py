@@ -1,5 +1,6 @@
 import uuid
-from chromadb import AsyncHttpClient
+from chromadb import AsyncHttpClient, AsyncClientAPI
+from chromadb.api.models.AsyncCollection import AsyncCollection
 
 from config.models.backend import ChromaConfig
 from src.core.interfaces.backend import SearchBackend
@@ -15,13 +16,17 @@ class ChromaBackend(SearchBackend):
     """
 
     def __init__(self, config: ChromaConfig, embedder: BaseEmbedder):
-        self._client = AsyncHttpClient(host=config.host, port=config.port)
-        self._embedder = embedder
         self._config = config
-        self._collection = None
+        self._embedder = embedder
+        self._client: AsyncClientAPI | None = None
+        self._collection: AsyncCollection | None = None
 
-    async def _get_collection(self):
+    async def _get_collection(self) -> AsyncCollection:
         if self._collection is None:
+            self._client = await AsyncHttpClient(
+                host=self._config.host,
+                port=self._config.port,
+            )
             self._collection = await self._client.get_or_create_collection(
                 name=self._config.collection_name,
                 metadata={"hnsw:space": self._config.distance_function},

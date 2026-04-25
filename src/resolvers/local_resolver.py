@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from config.models import LocalResolverConfig
+from config.models.resolver import LocalResolverConfig
 from src.resolvers import BaseSourceResolver
 
 
