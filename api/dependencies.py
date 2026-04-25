@@ -1,5 +1,5 @@
 from functools import lru_cache
-from app.config.app_settings import AppSettings
+from app.config.settings import AppSettings
 from app.src.factories.app_factory import ApplicationFactory
 from app.src.pipelines.ingestion_pipeline import IngestionPipeline
 from app.src.pipelines.rag_pipeline import RAGPipeline

@@ -1,6 +1,6 @@
 import asyncio
 
-from app.config.app_settings import AppSettings
+from app.config.settings import AppSettings
 from app.src.core.search.search_query import SearchQuery
 from app.src.factories import ApplicationFactory
 

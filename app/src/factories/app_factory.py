@@ -1,4 +1,4 @@
-from app.config.app_settings import AppSettings
+from app.config.settings import AppSettings
 from app.src.pipelines.ingestion_pipeline import IngestionPipeline
 from app.src.pipelines.rag_pipeline import RAGPipeline
 from app.src.core.ingestion.source_manager import DefaultSourceManager
