@@ -1,8 +1,8 @@
 import asyncio
 
-from config.app_settings import AppSettings
-from src.factories import ApplicationFactory
-from src.core.search.search_query import SearchQuery
+from app.config.app_settings import AppSettings
+from app.src.core.search.search_query import SearchQuery
+from app.src.factories import ApplicationFactory
 
 
 async def run() -> None:

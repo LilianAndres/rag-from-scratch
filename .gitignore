@@ -41,8 +41,8 @@ secrets.toml
 *credentials*
 
 # Config overrides (keep the template, ignore local overrides)
-config/settings.local.yaml
-config/settings.local.yml
+app/config/settings.local.yaml
+app/config/settings.local.yml
 config/*.local.*
 
 # Type checkers & linters
