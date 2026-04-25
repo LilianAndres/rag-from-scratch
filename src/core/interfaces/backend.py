@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from src.core.search.query import SearchQuery
-from src.core.search.result import SearchResult
+from src.core.search.search_query import SearchQuery
+from src.core.search.search_result import SearchResult
 from src.core.domain.chunk import Chunk
 
 

@@ -1,5 +1,4 @@
-from .openai_generator import OpenAIGenerator
-from .ollama_generator import OllamaGenerator
+from .rag_generator import RAGGenerator
 
 
-__all__ = ["OpenAIGenerator", "OllamaGenerator"]
+__all__ = ["RAGGenerator"]

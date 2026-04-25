@@ -1,18 +1,11 @@
 from pydantic_settings import (
-    BaseSettings,
-    SettingsConfigDict,
-    PydanticBaseSettingsSource,
-    YamlConfigSettingsSource,
-    EnvSettingsSource,
+    BaseSettings, SettingsConfigDict, PydanticBaseSettingsSource,
+    YamlConfigSettingsSource, EnvSettingsSource,
 )
 
 from config.models import (
-    ResolverConfig,
-    LoaderConfig,
-    EmbedderConfig,
-    BackendConfig,
-    GeneratorConfig,
-    RerankerConfig,
+    ResolverConfig, LoaderConfig, EmbedderConfig, BackendConfig,
+    GeneratorConfig, RerankerConfig, LLMsConfig, QueryTransformerConfig,
 )
 
 
@@ -25,6 +18,8 @@ class AppSettings(BaseSettings):
     backend: BackendConfig
     generator: GeneratorConfig
     reranker: RerankerConfig
+    llms: LLMsConfig
+    query_transformer: QueryTransformerConfig
 
     @classmethod
     def settings_customise_sources(

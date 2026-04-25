@@ -5,8 +5,8 @@ from config.models.backend import ChromaConfig
 from src.core.interfaces.backend import SearchBackend
 from src.core.interfaces.embedder import BaseEmbedder
 from src.core.domain.chunk import Chunk
-from src.core.search.query import SearchQuery
-from src.core.search.result import SearchResult
+from src.core.search.search_query import SearchQuery
+from src.core.search.search_result import SearchResult
 
 
 class ChromaBackend(SearchBackend):

@@ -4,6 +4,8 @@ from .embedder import BaseEmbedder
 from .reranker import BaseReranker
 from .generator import BaseGenerator
 from .backend import SearchBackend
+from .llm import BaseLanguageModel
+from .query_transformer import BaseQueryTransformer
 
 __all__ = [
     "BaseLoader",
@@ -12,4 +14,6 @@ __all__ = [
     "BaseReranker",
     "BaseGenerator",
     "SearchBackend",
+    "BaseLanguageModel",
+    "BaseQueryTransformer",
 ]
