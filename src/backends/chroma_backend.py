@@ -35,7 +35,7 @@ class ChromaBackend(SearchBackend):
         collection = await self._get_collection()
 
         texts = [chunk.content for chunk in chunks]
-        embeddings = self._embedder.embed_texts(texts)
+        embeddings = await self._embedder.embed_texts(texts)
 
         ids = [chunk.id or str(uuid.uuid4()) for chunk in chunks]
 
@@ -54,7 +54,7 @@ class ChromaBackend(SearchBackend):
     async def search(self, query: SearchQuery) -> list[SearchResult]:
         collection = await self._get_collection()
 
-        query_embedding = self._embedder.embed_query(query.text)
+        query_embedding = await self._embedder.embed_query(query.text)
         where = query.filters or None
 
         response = await collection.query(

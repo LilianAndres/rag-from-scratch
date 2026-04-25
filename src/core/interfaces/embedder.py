@@ -13,7 +13,7 @@ class BaseEmbedder(ABC):
     """
 
     @abstractmethod
-    def embed_texts(self, texts: list[str]) -> list[list[float]]:
+    async def embed_texts(self, texts: list[str]) -> list[list[float]]:
         """
         Embed a batch of raw text strings.
 
@@ -28,7 +28,7 @@ class BaseEmbedder(ABC):
             A list of embedding vectors, one per input text, in the same order.
         """
 
-    def embed_chunks(self, chunks: list[Chunk], model_name: str) -> list[Embedding]:
+    async def embed_chunks(self, chunks: list[Chunk], model_name: str) -> list[Embedding]:
         """
         Embed a list of chunks, producing Embedding objects.
 
@@ -44,14 +44,14 @@ class BaseEmbedder(ABC):
         List[Embedding]
             One embedding per chunk.
         """
-        vectors = self.embed_texts([chunk.content for chunk in chunks])
+        vectors = await self.embed_texts([chunk.content for chunk in chunks])
         embeddings = [
             Embedding(chunk_id=chunk.id, vector=vec, model_name=model_name)
             for chunk, vec in zip(chunks, vectors)
         ]
         return embeddings
 
-    def embed_query(self, query: str) -> list[float]:
+    async def embed_query(self, query: str) -> list[float]:
         """
         Embed a single query string.
 

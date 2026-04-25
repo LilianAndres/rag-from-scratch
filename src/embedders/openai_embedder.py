@@ -18,15 +18,15 @@ class OpenAIEmbedder(BaseEmbedder):
         self.batch_size = config.batch_size
         self._client = OpenAI(api_key=config.api_key.get_secret_value())
 
-    def embed_texts(self, texts: list[str]) -> list[list[float]]:
+    async def embed_texts(self, texts: list[str]) -> list[list[float]]:
         if not texts:
             return []
         vectors: list[list[float]] = []
         for start in range(0, len(texts), self.batch_size):
-            vectors.extend(self._embed_batch(texts[start : start + self.batch_size]))
+            vectors.extend(await self._embed_batch(texts[start : start + self.batch_size]))
         return vectors
 
-    def _embed_batch(self, texts: list[str]) -> list[list[float]]:
+    async def _embed_batch(self, texts: list[str]) -> list[list[float]]:
         kwargs: dict = dict(input=texts, model=self.model)
         if self.dimensions is not None:
             kwargs["dimensions"] = self.dimensions

@@ -13,7 +13,7 @@ class InfinityEmbedder(BaseEmbedder):
     def __init__(self, config: InfinityEmbedderConfig):
         self._config = config
 
-    def embed_texts(self, texts: list[str]) -> list[list[float]]:
+    async def embed_texts(self, texts: list[str]) -> list[list[float]]:
         if not texts:
             return []
 
