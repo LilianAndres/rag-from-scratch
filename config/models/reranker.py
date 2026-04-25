@@ -1,11 +1,13 @@
 from pydantic import BaseModel
 
 
-class CrossEncoderRerankerConfig(BaseModel):
+class InfinityRerankerConfig(BaseModel):
+    base_url: str = "http://localhost:7997"
     model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
-    top_n: int | None = None  # None = return all, reordered
+    top_n: int | None = None
+    timeout: float = 30.0
 
 class RerankerConfig(BaseModel):
     enabled: bool = False
-    provider: str = "cross-encoder"
-    cross_encoder: CrossEncoderRerankerConfig = CrossEncoderRerankerConfig()
+    provider: str = "infinity"
+    infinity: InfinityRerankerConfig = InfinityRerankerConfig()

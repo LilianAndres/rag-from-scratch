@@ -1,4 +1,4 @@
-from .cross_encoder_reranker import CrossEncoderReranker
+from .infinity_reranker import InfinityReranker
 
 
-__all__ = ["CrossEncoderReranker"]
+__all__ = ["InfinityReranker"]

@@ -14,10 +14,11 @@ chunker:
     separators: null
 
 embedder:
-  provider: huggingface
-  huggingface:
+  provider: infinity
+  infinity:
+    base_url: http://localhost:7997
     model: BAAI/bge-small-en-v1.5
-    batch_size: 64
+    timeout: 30.0
 
 backend:
   type: chroma
@@ -28,11 +29,13 @@ backend:
     distance_function: cosine
 
 reranker:
-  enabled: false
-  provider: cross-encoder
-  cross_encoder:
+  enabled: true
+  provider: infinity
+  infinity:
+    base_url: http://localhost:7997
     model: cross-encoder/ms-marco-MiniLM-L-6-v2
-    top_n: null
+    top_n: 5
+    timeout: 30.0
 
 llms:
   profiles:

@@ -1,5 +1,5 @@
 from .openai_embedder import OpenAIEmbedder
-from .huggingface_embedder import HuggingFaceEmbedderConfig
+from .infinity_embedder import InfinityEmbedder
 
 
-__all__ = ["OpenAIEmbedder", "HuggingFaceEmbedderConfig"]
+__all__ = ["OpenAIEmbedder", "InfinityEmbedder"]

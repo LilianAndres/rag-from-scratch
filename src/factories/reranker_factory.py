@@ -14,13 +14,11 @@ class RerankerFactory:
             return None
 
         match self._config.provider:
-            case "cross-encoder":
-                from src.rerankers.cross_encoder_reranker import CrossEncoderReranker
-
-                if self._config.cross_encoder is None:
-                    raise ValueError("Missing cross-encoder config")
-
-                return CrossEncoderReranker(self._config.cross_encoder)
+            case "infinity":
+                from src.rerankers.infinity_reranker import InfinityReranker
+                if self._config.infinity is None:
+                    raise ValueError("Missing infinity reranker config")
+                return InfinityReranker(self._config.infinity)
 
             case _:
                 raise ValueError(

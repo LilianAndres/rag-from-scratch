@@ -12,9 +12,9 @@ class EmbedderFactory:
                 from src.embedders.openai_embedder import OpenAIEmbedder
                 return OpenAIEmbedder(self._config.openai)
 
-            case "huggingface":
-                from src.embedders.huggingface_embedder import HuggingFaceEmbedder
-                return HuggingFaceEmbedder(self._config.huggingface)
+            case "infinity":
+                from src.embedders.infinity_embedder import InfinityEmbedder
+                return InfinityEmbedder(self._config.infinity)
 
             case _:
                 raise ValueError(f"Unknown embedder provider: '{self._config.provider!r}'")
