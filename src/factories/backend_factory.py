@@ -12,7 +12,7 @@ class BackendFactory:
         match self._config.type:
 
             case "chroma":
-                from src.backends.dense.chroma_backend import ChromaBackend
+                from src.backends.chroma_backend import ChromaBackend
 
                 if self._config.chroma is None:
                     raise ValueError("Missing chroma config")
@@ -20,7 +20,7 @@ class BackendFactory:
                 return ChromaBackend(config=self._config.chroma, embedder=embedder)
 
             case "elk":
-                from src.backends.sparse.elk_backend import ELKBackend
+                from src.backends.elk_backend import ELKBackend
 
                 if self._config.elk is None:
                     raise ValueError("Missing ELK config")

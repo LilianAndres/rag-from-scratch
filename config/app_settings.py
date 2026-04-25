@@ -4,7 +4,7 @@ from pydantic_settings import (
 )
 
 from config.models import (
-    ResolverConfig, LoaderConfig, EmbedderConfig, BackendConfig,
+    ResolverConfig, LoaderConfig, ChunkerConfig, EmbedderConfig, BackendConfig,
     GeneratorConfig, RerankerConfig, LLMsConfig, QueryTransformerConfig,
 )
 
@@ -14,6 +14,7 @@ class AppSettings(BaseSettings):
 
     resolvers: ResolverConfig
     loaders: LoaderConfig
+    chunker: ChunkerConfig
     embedder: EmbedderConfig
     backend: BackendConfig
     generator: GeneratorConfig

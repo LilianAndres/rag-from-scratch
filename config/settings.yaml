@@ -6,6 +6,13 @@ loaders:
   pdf:
     page_separator: "\n"
 
+chunker:
+  provider: recursive
+  recursive:
+    chunk_size: 400
+    chunk_overlap: 50
+    separators: null
+
 embedder:
   provider: huggingface
   huggingface:
@@ -13,26 +20,19 @@ embedder:
     batch_size: 64
 
 backend:
-  type: hybrid
-  hybrid:
-    rrf_k: 60
-    backends:
-      - type: chroma
-        chroma:
-          host: localhost
-          port: 8000
-          collection_name: documents
-      - type: elk
-        elk:
-          hosts: ["http://localhost:9200"]
-          index_name: documents
+  type: chroma
+  chroma:
+    host: localhost
+    port: 8000
+    collection_name: documents
+    distance_function: cosine
 
 reranker:
   enabled: false
   provider: cross-encoder
   cross_encoder:
     model: cross-encoder/ms-marco-MiniLM-L-6-v2
-    top_n: null  # return all chunks reordered, let the generator decide
+    top_n: null
 
 llms:
   profiles:

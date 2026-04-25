@@ -1,5 +1,6 @@
 import hashlib
 
+from config.models.chunker import RecursiveChunkerConfig
 from src.core.domain import Document, Chunk
 from src.core.interfaces.chunker import BaseChunker
 
@@ -12,13 +13,11 @@ class RecursiveChunker(BaseChunker):
 
     DEFAULT_SEPARATORS = ["\n\n", "\n", ". ", " ", ""]
 
-    def __init__(self, chunk_size: int = 400, chunk_overlap: int = 50, separators: list[str] | None = None):
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
-        self.separators = separators or self.DEFAULT_SEPARATORS
+    def __init__(self, config: RecursiveChunkerConfig):
+        self._config = config
 
     def chunk(self, document: Document) -> list[Chunk]:
-        raw_splits = self._split_text(document.content, self.separators)
+        raw_splits = self._split_text(document.content, self._config.separators or self.DEFAULT_SEPARATORS)
         merged_splits = self._merge_splits(raw_splits)
         return [
             Chunk(
@@ -54,7 +53,7 @@ class RecursiveChunker(BaseChunker):
         good: list[str] = [] # splits that fit on their own
 
         for split in splits:
-            if len(split) < self.chunk_size:
+            if len(split) < self._config.chunk_size:
                 good.append(split)
             else:
                 # Too large: flush good splits first, then recurse
@@ -80,10 +79,10 @@ class RecursiveChunker(BaseChunker):
         for split in splits:
             split_len = len(split)
 
-            if current_len + split_len > self.chunk_size and current:
+            if current_len + split_len > self._config.chunk_size and current:
                 chunks.append(" ".join(current))
                 # Carry overlap: keep trailing splits that fit the window
-                while current and current_len > self.chunk_overlap:
+                while current and current_len > self._config.chunk_overlap:
                     current_len -= len(current[0])
                     current.pop(0)
 
