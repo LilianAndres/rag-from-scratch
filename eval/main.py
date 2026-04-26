@@ -3,10 +3,10 @@ import asyncio
 from app.config.settings import AppSettings
 from app.src.factories.app_factory import ApplicationFactory
 from eval.settings import EvalSettings
-from eval.evaluator import RagasEvaluator
-from eval.loader import EvalSample, load_dataset
-from eval.reporter import print_results, save_results
-from eval.runner import run_pipeline
+from eval.ragas_evaluator import RagasEvaluator
+from eval.dateset_loader import EvalSample, load_dataset
+from eval.eval_reporter import print_results, save_results
+from eval.eval_runner import run_pipeline
 
 
 async def run(settings: EvalSettings) -> None:
@@ -34,7 +34,7 @@ async def run(settings: EvalSettings) -> None:
 
     print("\nRunning RAGAS evaluation...")
     evaluator = RagasEvaluator(settings)
-    results = evaluator.evaluate(outputs)
+    results = await evaluator.evaluate(outputs)
 
     print_results(results)
     save_results(results, settings.output_path)

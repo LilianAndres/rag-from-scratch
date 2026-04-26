@@ -1,12 +1,10 @@
 from pathlib import Path
-from pydantic import BaseModel, SecretStr, Field
+from pydantic import BaseModel
 from pydantic_settings import (
-    BaseSettings,
-    SettingsConfigDict,
-    PydanticBaseSettingsSource,
-    YamlConfigSettingsSource,
-    EnvSettingsSource,
+    BaseSettings, SettingsConfigDict,
+    PydanticBaseSettingsSource, YamlConfigSettingsSource, EnvSettingsSource,
 )
+from app.config.models.provider import ProvidersConfig
 
 CONFIG_PATH = Path(__file__).parent / "config.yaml"
 ROOT_ENV = Path(__file__).parent.parent / ".env"
@@ -15,12 +13,10 @@ ROOT_ENV = Path(__file__).parent.parent / ".env"
 class OpenAIJudgeConfig(BaseModel):
     model: str = "gpt-4o-mini"
     temperature: float = 0.0
-    api_key: SecretStr
 
 
 class OllamaJudgeConfig(BaseModel):
     model: str = "llama3:8b"
-    base_url: str = "http://localhost:11434"
     temperature: float = 0.0
 
 
@@ -44,6 +40,7 @@ class EvalSettings(BaseSettings):
     top_n: int | None = None
 
     judge: JudgeLLMConfig = JudgeLLMConfig()
+    providers: ProvidersConfig = ProvidersConfig()  # shared with app module
 
     @classmethod
     def settings_customise_sources(
