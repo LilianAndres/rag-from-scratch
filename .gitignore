@@ -71,7 +71,6 @@ pip-delete-this-directory.txt
 
 # uv
 .uv/
-uv.lock
 
 # poetry
 poetry.lock
