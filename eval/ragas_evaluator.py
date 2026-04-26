@@ -2,7 +2,7 @@ from ragas.llms import llm_factory
 from ragas.metrics import LLMContextRecall, Faithfulness, FactualCorrectness, ResponseRelevancy
 
 from eval.eval_runner import PipelineOutput
-from eval.settings import EvalSettings
+from eval.eval_settings import EvalSettings
 
 
 def _build_llm(settings: EvalSettings):

@@ -1,12 +1,16 @@
-# rag-from-scratch
+# 🚀 rag-from-scratch
 
-A modular, production-ready **Retrieval-Augmented Generation (RAG)** system built from the ground up in Python. Every component - from document ingestion to answer generation - is cleanly abstracted behind interfaces, making it easy to swap backends, models, and retrieval strategies without touching core logic.
+A modular, production-ready **Retrieval-Augmented Generation (RAG)** system built from the ground up in Python.
+
+Every component — from ingestion to generation — is abstracted behind clean interfaces, making it easy to swap models, backends, and strategies **without touching core logic**.
 
 ---
 
-## Overview
+## ✨ Overview
 
-RAG grounds LLM responses in your own documents by retrieving relevant context at query time. This project implements the full pipeline from scratch:
+RAG enhances LLM responses by grounding them in your own data.
+
+This project implements the full pipeline:
 
 ```
 Documents → Load → Chunk → Embed → Store
@@ -14,89 +18,81 @@ Documents → Load → Chunk → Embed → Store
               Query → Transform → Retrieve → Rerank → Generate → Answer
 ```
 
-The architecture is built around **interfaces and factories**: each stage of the pipeline is defined by a clean Python interface and instantiated via a corresponding factory, configured entirely through `config.yaml`.
+The architecture is built around:
+
+- **Interfaces** → define behavior  
+- **Factories** → instantiate components  
+- **Config-driven system** → everything controlled in one place
 
 ---
 
-## Features
+## 🔥 Features
 
-- **Pluggable vector backends** - Chroma, Elasticsearch (ELK), or Hybrid (both combined)
-- **Multiple LLM providers** - OpenAI or Ollama
-- **Multiple embedding providers** - OpenAI or Infinity
-- **Query transformation** - passthrough or multi-query expansion for improved recall
-- **Reranking** - optional cross-encoder reranking via Infinity
-- **Document loaders** - PDF support out of the box
-- **REST API** - FastAPI-powered ingestion and search endpoints
-- **Fully configurable** - swap any component via `config.yaml`, no code changes needed
-- **Dockerized** - run the entire stack with a single `docker-compose` command
+- 🔌 **Pluggable vector backends** 
+- 🤖 **Multiple LLM providers**
+- 🧠 **Embeddings**
+- 🔍 **Query transformation**
+- 📊 **Reranking**
+- 📄 **Document loaders**
+- 🌐 **FastAPI REST API**  
+- ⚙️ **Fully configurable**
+- 🐳 **Production-ready**  
+- 🧪 **Offline evaluation module**  
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 .
-├── api/                        # FastAPI application layer
-│   ├── app.py                  # App entrypoint & middleware
+├── api/                        # FastAPI layer (HTTP interface)
+│   ├── app.py                  # FastAPI app creation
 │   ├── dependencies.py         # Dependency injection
-│   ├── schemas.py              # Request / response schemas
+│   ├── schemas.py              # API schemas
 │   └── routers/
-│       ├── ingestion.py        # POST /ingest — load & index documents
-│       └── search.py           # POST /search — query the RAG pipeline
+│       ├── ingestion.py        # POST /ingest
+│       └── search.py           # POST /search
 │
 ├── app/
 │   ├── config/
-│   │   ├── config.yaml         # ⚙️  Main configuration file
-│   │   ├── settings.py         # Pydantic settings loader
-│   │   └── models/             # Config model definitions per component
+│   │   ├── config.yaml         # ⚙️ Main configuration
+│   │   ├── settings.py         # Env + settings loader
+│   │   └── models/             # Typed config models
 │   │
 │   └── src/
-│       ├── backends/           # Vector store implementations
-│       │   ├── chroma_backend.py
-│       │   ├── elk_backend.py
-│       │   └── hybrid_backend.py
-│       ├── chunkers/           # Text splitting strategies
-│       │   └── recursive_chunker.py
+│       ├── backends/           # Vector stores (Chroma, ELK, Hybrid)
+│       ├── chunkers/           # Text splitting
 │       ├── embedders/          # Embedding providers
-│       │   ├── openai_embedder.py
-│       │   └── infinity_embedder.py
 │       ├── llms/               # LLM providers
-│       │   ├── openai_llm.py
-│       │   └── ollama_llm.py
-│       ├── loaders/            # Document loaders
-│       │   ├── loader.py
-│       │   └── pdf_loader.py
-│       ├── query_transformers/ # Query pre-processing
-│       │   ├── passthrough_transformer.py
-│       │   └── multi_query_transformer.py
-│       ├── rerankers/          # Result reranking
-│       │   └── infinity_reranker.py
-│       ├── generators/         # Answer generation (RAG)
-│       │   └── rag_generator.py
-│       ├── pipelines/          # Full pipeline orchestration
-│       │   ├── ingestion_pipeline.py
-│       │   └── rag_pipeline.py
-│       ├── factories/          # Component instantiation from config
-│       ├── core/               # Domain models & interfaces
-│       │   ├── domain/         # Chunk, Document
-│       │   ├── interfaces/     # Abstract base classes for all components
+│       ├── loaders/            # Document loaders (PDF, etc.)
+│       ├── query_transformers/ # Query rewriting
+│       ├── rerankers/          # Reranking logic
+│       ├── generators/         # Answer generation
+│       ├── pipelines/          # Ingestion & RAG pipelines
+│       ├── factories/          # Component factories
+│       ├── core/               # Domain + interfaces
+│       │   ├── domain/
+│       │   ├── interfaces/
 │       │   ├── embeddings/
 │       │   ├── generation/
-│       │   ├── ingestion/
-│       │   ├── search/
-│       │   └── prompts/        # Jinja2 prompt templates
-│       ├── prompts/
-│       │   ├── rag.j2          # Main RAG prompt
-│       │   └── multi_query.j2  # Multi-query expansion prompt
-│       └── resolvers/          # File path resolution
+│       │   └── search/
+│       ├── prompts/            # Jinja2 templates
+│       │   ├── rag.j2
+│       │   └── multi_query.j2
+│       └── resolvers/          # File resolution
 │
-├── main.py                     # CLI entrypoint
+├── eval/                       # 🧪 Offline evaluation module
+│   ├── dataset/                # Test questions
+│   ├── eval_runner.py
+│   ├── ragas_evaluator.py
+│   ├── eval_reporter.py
+│   └── main.py                 # Entry point
+│
+├── main.py                     # App entrypoint (runs API)
 ├── Dockerfile
-├── docker-compose.yaml
+├── docker-compose.dev.yml      # Local dev infrastructure (optional)
 └── pyproject.toml
 ```
-
----
 
 ## Pipelines
 
@@ -120,140 +116,185 @@ Answers a user query using retrieved context:
 
 ---
 
-## Configuration
+### ⚙️ Configuration
 
-All components are configured in `app/config/config.yaml`. Switch backends, models, and strategies by editing this single file.
+All components are configured in:
 
-```yaml
-# Example structure (adapt to your config.yaml)
-
-backend: chroma          # chroma | elk | hybrid
-
-embedder:
-  provider: openai       # openai | infinity
-  model: text-embedding-3-small
-
-llm:
-  provider: openai       # openai | ollama
-  model: gpt-4o-mini
-
-chunker:
-  strategy: recursive
-  chunk_size: 512
-  chunk_overlap: 64
-
-query_transformer:
-  strategy: passthrough  # passthrough | multi_query
-
-reranker:
-  enabled: false
-  provider: infinity
+```
+app/config/config.yaml
 ```
 
-> Refer to `app/config/models/` for the full set of options per component.
+Example:
+
+```yaml
+providers:
+  ollama:
+    base_url: "http://localhost:11434"
+  infinity:
+    base_url: "http://localhost:7997"
+
+llms:
+  profiles:
+    fast:
+      provider: ollama
+      ollama:
+        model: llama3:8b
+        temperature: 0.0
+        max_tokens: 512
+        timeout: 360.0
+
+resolvers:
+  local:
+    base_path: /tmp
+
+loaders:
+  pdf:
+    page_separator: "\n"
+
+chunker:
+  provider: recursive
+  recursive:
+    chunk_size: 800
+    chunk_overlap: 100
+    separators: null
+
+embedder:
+  provider: infinity
+  infinity:
+    model: BAAI/bge-small-en-v1.5
+    timeout: 60.0
+
+backend:
+  type: chroma
+  chroma:
+    host: localhost
+    port: 8001
+    collection_name: documents
+    distance_function: cosine
+
+reranker:
+  enabled: true
+  provider: infinity
+  infinity:
+    model: cross-encoder/ms-marco-MiniLM-L-6-v2
+    top_n: 5
+    timeout: 60.0
+
+generator:
+  llm_profile: fast
+  prompts_dir: app/src/prompts/templates
+  prompt_template: rag.j2
+
+query_transformer:
+  enabled: false
+  provider: multi-query
+  llm_profile: fast
+  prompts_dir: app/src/prompts/templates
+  multi_query:
+    n_variants: 3
+    prompt_template: multi_query.j2
+```
+
+> Refer to `app/config/models/` for the full set of options per component Feel free to add your own.
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
 - Python 3.12+
-- Docker & Docker Compose (for the containerized setup)
-- An OpenAI API key and/or a running Ollama instance (depending on your config)
+- Docker (optional but recommended)
+- OpenAI API key (if using OpenAI)
 
-### Running with Docker
+---
 
-The recommended way to run the full stack (API + vector stores):
+## 🐳 Running with Docker (recommended)
 
 ```bash
-# Clone the repository
 git clone https://github.com/LilianAndres/rag-from-scratch.git
 cd rag-from-scratch
 
-# Configure your environment
-cp .env.example .env          # then fill in your API keys
-nano app/config/config.yaml   # choose your backend, LLM, embedder…
+cp .env.example .env
+nano app/config/config.yaml
 
-# Start everything
-docker-compose up --build
+docker compose -f docker-compose.dev.yaml up --build
 ```
 
-The API will be available at `http://localhost:8000`.
+The API should be available at `http://localhost:8000`.
 
-### Running Locally
+---
+
+## 💻 Running Locally
 
 ```bash
-# Install dependencies
-pip install -e .
-
-# Start the API
-python main.py
+uv sync
+uv run python main.py
 ```
 
-> Make sure any external services (Chroma, Elasticsearch, Ollama) are reachable at the URLs defined in your config.
+> Make sure any external services are reachable at the URLs defined in your config.
 
 ---
 
-## API Reference
+## 🧪 Evaluation Module (offline)
 
-### Ingest documents
-
-```http
-POST /ingest
-Content-Type: application/json
-
-{
-  "source": "path/to/your/documents"
-}
+```bash
+uv run python eval/main.py
 ```
 
-Loads, chunks, embeds, and stores the documents into the configured backend.
-
-### Search
-
-```http
-POST /search
-Content-Type: application/json
-
-{
-  "query": "What is the refund policy?"
-}
-```
-
-Runs the full RAG pipeline and returns a generated answer with source chunks.
-
-Interactive API docs are available at `http://localhost:8000/docs` once the server is running.
+Used for benchmarking, testing configurations, and regression checks.
 
 ---
 
-## Component Matrix
+## 🔌 API Reference
 
-| Stage             | Options                              |
-|-------------------|--------------------------------------|
-| Document Loader   | PDF, plain text                      |
-| Chunker           | Recursive character splitter         |
-| Embedder          | OpenAI, Infinity (self-hosted)       |
-| Vector Backend    | Chroma, Elasticsearch, Hybrid        |
-| Query Transformer | Passthrough, Multi-Query             |
-| Reranker          | Infinity (optional)                  |
-| LLM               | OpenAI, Ollama                       |
+The documentation is available at `http://localhost:8000/docs`.
 
 ---
 
-## Extending the System
+## 🧠 Architecture Principles
 
-Every component follows the same pattern — implement the interface, register in the factory, add config:
-
-1. **Create** your class in the appropriate `src/` subdirectory, implementing the interface from `core/interfaces/`
-2. **Register** it in the corresponding factory under `src/factories/`
-3. **Add** its config model under `app/config/models/`
-4. **Select** it in `config.yaml`
-
-No other files need to change.
+- Interface-driven design  
+- Dependency injection  
+- Factory pattern  
+- Config over code  
+- Modular pipelines  
 
 ---
 
-## License
+## 🛠️ Extending the system
 
-This project is open-source. See [`LICENSE`](./LICENSE) for details.
+1. Implement interface (`core/interfaces/`)  
+2. Add implementation in `src/`  
+3. Register in factory  
+4. Add config model  
+5. Update `config.yaml`  
+
+No core changes required.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+- Follow existing architecture  
+- Keep components modular  
+- Add config models  
+- Run evaluation before submitting  
+
+---
+
+## 🧭 Going further
+
+- Add more loaders (HTML, Markdown, APIs)
+- Add more providers (Anthropic, Google, etc.)
+- Add observability (logs, tracing)
+- Add guardrails layer (input, output)
+- Add CI/CD workflows (evaluation, docker image)
+
+---
+
+## 📄 License
+
+This project is under MIT license. Please feel free to use it.

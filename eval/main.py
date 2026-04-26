@@ -2,7 +2,7 @@ import asyncio
 
 from app.config.settings import AppSettings
 from app.src.factories.app_factory import ApplicationFactory
-from eval.settings import EvalSettings
+from eval.eval_settings import EvalSettings
 from eval.ragas_evaluator import RagasEvaluator
 from eval.dateset_loader import EvalSample, load_dataset
 from eval.eval_reporter import print_results, save_results

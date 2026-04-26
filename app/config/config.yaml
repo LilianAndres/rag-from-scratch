@@ -39,7 +39,7 @@ backend:
   type: chroma
   chroma:
     host: localhost
-    port: 8000
+    port: 8001
     collection_name: documents
     distance_function: cosine
 
@@ -53,14 +53,14 @@ reranker:
 
 generator:
   llm_profile: fast
-  prompts_dir: app/src/prompts
+  prompts_dir: app/src/prompts/templates
   prompt_template: rag.j2
 
 query_transformer:
   enabled: false
   provider: multi-query
   llm_profile: fast
-  prompts_dir: app/src/prompts
+  prompts_dir: app/src/prompts/templates
   multi_query:
     n_variants: 3
     prompt_template: multi_query.j2

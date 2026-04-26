@@ -20,4 +20,4 @@ htmlcov/
 *.log
 logs/
 README.md
-docker-compose.yaml
+docker-compose.dev.yaml

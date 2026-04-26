@@ -15,8 +15,8 @@ RUN pip install --no-cache-dir -e .
 # Copy application code
 COPY . .
 
-# Expose API port
-EXPOSE 8000
+# Default port (can be overriden)
+ENV PORT=8000
 
 # Run the API
-CMD ["uvicorn", "api.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "main.py"]
