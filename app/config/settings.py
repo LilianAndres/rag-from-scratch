@@ -26,12 +26,13 @@ class AppSettings(BaseSettings):
     loaders: LoaderConfig = LoaderConfig()
     chunker: ChunkerConfig = ChunkerConfig()
     embedder: EmbedderConfig = EmbedderConfig()
-    backend: BackendConfig = BackendConfig()
-    generator: GeneratorConfig = GeneratorConfig()
     reranker: RerankerConfig = RerankerConfig()
     providers: ProvidersConfig = ProvidersConfig()
     query_transformer: QueryTransformerConfig = QueryTransformerConfig()
     llms: LLMsConfig = LLMsConfig()
+
+    backend: BackendConfig
+    generator: GeneratorConfig
 
     @classmethod
     def settings_customise_sources(

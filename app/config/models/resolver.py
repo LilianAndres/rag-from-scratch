@@ -6,4 +6,4 @@ class LocalResolverConfig(BaseModel):
 
 
 class ResolverConfig(BaseModel):
-    local: LocalResolverConfig | None = None
+    local: LocalResolverConfig = LocalResolverConfig()
