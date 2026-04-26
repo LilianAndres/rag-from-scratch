@@ -1,8 +1,8 @@
 from app.config.settings import AppSettings
 from app.src.pipelines.ingestion_pipeline import IngestionPipeline
 from app.src.pipelines.rag_pipeline import RAGPipeline
-from app.src.core.ingestion.source_manager import DefaultSourceManager
-from app.src.core.ingestion.loader_manager import DefaultLoaderManager
+from app.src.routers.source_router import DefaultSourceRouter
+from app.src.routers.loader_router import DefaultLoaderRouter
 from app.src.factories.resolver_factory import ResolverFactory
 from app.src.factories.loader_factory import LoaderFactory
 from app.src.factories.chunker_factory import ChunkerFactory
@@ -22,7 +22,7 @@ class ApplicationFactory:
 
     def _get_embedder(self):
         if self._embedder is None:
-            self._embedder = EmbedderFactory(self.settings.embedder).create_embedder()
+            self._embedder = EmbedderFactory(self.settings.embedder, self.settings.providers).create_embedder()
         return self._embedder
 
     def _get_llm(self, profile: str):
@@ -32,7 +32,7 @@ class ApplicationFactory:
                 f"Unknown LLM profile '{profile}'. "
                 f"Available: {list(self.settings.llms.profiles.keys())}"
             )
-        return LLMFactory(config).create_llm()
+        return LLMFactory(config, self.settings.providers).create_llm()
 
     def create_ingestion_pipeline(self) -> IngestionPipeline:
         resolver_registry = ResolverFactory(self.settings.resolvers).build_registry()
@@ -42,8 +42,8 @@ class ApplicationFactory:
         backend = BackendFactory(self.settings.backend).create_backend(embedder)
 
         return IngestionPipeline(
-            resolver=DefaultSourceManager(resolver_registry),
-            loader=DefaultLoaderManager(loader_registry),
+            resolver=DefaultSourceRouter(resolver_registry),
+            loader=DefaultLoaderRouter(loader_registry),
             chunker=chunker,
             backend=backend,
         )
@@ -66,7 +66,7 @@ class ApplicationFactory:
             ),
         ).create()
 
-        reranker = RerankerFactory(self.settings.reranker).create_reranker()
+        reranker = RerankerFactory(self.settings.reranker, self.settings.providers).create_reranker()
 
         return RAGPipeline(
             backend=backend,

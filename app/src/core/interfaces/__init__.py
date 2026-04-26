@@ -1,4 +1,4 @@
-from app.src.loaders.loader import BaseLoader
+from app.src.core.interfaces.loader import BaseLoader
 from .chunker import BaseChunker
 from .embedder import BaseEmbedder
 from .reranker import BaseReranker

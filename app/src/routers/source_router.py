@@ -1,10 +1,10 @@
 from pathlib import Path
 
+from app.src.core.interfaces.resolver import BaseSourceResolver
 from app.src.registry import BaseRegistry
-from app.src.resolvers import BaseSourceResolver
 
 
-class DefaultSourceManager:
+class DefaultSourceRouter:
     """
     Handles resolving any source string using the registered resolvers.
     """

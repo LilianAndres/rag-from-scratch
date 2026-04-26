@@ -1,4 +1,4 @@
-from .prompt_loader import PromptLoader
+from app.src.prompts.prompt_loader import PromptLoader
 
 
 __all__ = ["PromptLoader"]

@@ -25,20 +25,22 @@ class ELKBackend(SearchBackend):
     """
 
     def __init__(self, config: ELKConfig) -> None:
-        self._client = AsyncElasticsearch(
-            hosts=config.hosts,
-            basic_auth=(
-                (config.username, config.password.get_secret_value())
-                if config.username and config.password
-                else None
-            ),
-        )
-        self._config = config
+        self._hosts = config.hosts
+        self._username = config.username
+        self._password = config.password.get_secret_value()
+        self._index_name: str = config.index_name
+        self._client: AsyncElasticsearch | None = None
+
+    def _get_client(self) -> AsyncElasticsearch:
+        if self._client is None:
+            auth = (self._username, self._password) if self._username and self._password else None
+            self._client = AsyncElasticsearch(hosts=self._hosts, basic_auth=auth)
+        return self._client
 
     async def _ensure_index(self) -> None:
-        exists = await self._client.indices.exists(index=self._config.index_name)
+        exists = await self._client.indices.exists(index=self._index_name)
         if not exists:
-            await self._client.indices.create(index=self._config.index_name, body=_MAPPING)
+            await self._client.indices.create(index=self._index_name, body=_MAPPING)
 
     async def index(self, chunks: list[Chunk]) -> None:
         if not chunks:
@@ -48,7 +50,7 @@ class ELKBackend(SearchBackend):
 
         docs = [
             {
-                "_index": self._config.index_name,
+                "_index": self._index_name,
                 "_id": chunk.id,
                 "_source": self._chunk_to_source(chunk),
             }
@@ -64,7 +66,7 @@ class ELKBackend(SearchBackend):
         }
 
         response = await self._client.search(
-            index=self._config.index_name,
+            index=self._index_name,
             body=body,
         )
 
@@ -73,7 +75,7 @@ class ELKBackend(SearchBackend):
 
     async def delete(self, document_id: str) -> None:
         await self._client.delete_by_query(
-            index=self._config.index_name,
+            index=self._index_name,
             body={
                 "query": {
                     "term": {"document_id": document_id}

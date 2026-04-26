@@ -1,7 +1,7 @@
 from app.config.models.generator import GeneratorConfig
 from app.src.core.interfaces import BaseLanguageModel
 from app.src.core.interfaces.generator import BaseGenerator
-from app.src.core.prompts.prompt_loader import PromptLoader
+from app.src.prompts.prompt_loader import PromptLoader
 from app.src.generators import RAGGenerator
 
 

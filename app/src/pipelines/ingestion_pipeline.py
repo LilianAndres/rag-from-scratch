@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from app.src.core.domain import Document, Chunk
-from app.src.core.ingestion.loader_manager import DefaultLoaderManager
-from app.src.core.ingestion.source_manager import DefaultSourceManager
+from app.src.routers.loader_router import DefaultLoaderRouter
+from app.src.routers.source_router import DefaultSourceRouter
 from app.src.core.interfaces.chunker import BaseChunker
 from app.src.core.interfaces.backend import SearchBackend
 
@@ -11,8 +11,8 @@ class IngestionPipeline:
 
     def __init__(
         self,
-        resolver: DefaultSourceManager,
-        loader: DefaultLoaderManager,
+        resolver: DefaultSourceRouter,
+        loader: DefaultLoaderRouter,
         chunker: BaseChunker,
         backend: SearchBackend,
     ):

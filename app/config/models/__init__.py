@@ -6,6 +6,7 @@ from .backend import BackendConfig
 from .generator import GeneratorConfig
 from .query_transformer import QueryTransformerConfig
 from .reranker import RerankerConfig
+from .provider import ProvidersConfig
 from .llm import LLMsConfig
 
 __all__ = [
@@ -17,5 +18,6 @@ __all__ = [
     "GeneratorConfig",
     "RerankerConfig",
     "LLMsConfig",
+    "ProvidersConfig",
     "QueryTransformerConfig",
 ]

@@ -10,5 +10,5 @@ class QueryTransformerConfig(BaseModel):
     enabled: bool = False
     provider: str = "multi-query"
     llm_profile: str = "fast"
-    prompts_dir: str = "src/prompts"
+    prompts_dir: str = "app/config/prompts/templates"
     multi_query: MultiQueryConfig = MultiQueryConfig()

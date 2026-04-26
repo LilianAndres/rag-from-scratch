@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class LocalResolverConfig(BaseModel):
-    base_path: str
+    base_path: str = "/tmp"
 
 
 class ResolverConfig(BaseModel):

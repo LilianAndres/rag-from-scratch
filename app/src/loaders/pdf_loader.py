@@ -5,7 +5,7 @@ import pymupdf
 
 from app.config.models.loader import PDFLoaderConfig
 from app.src.core.domain.document import Document
-from app.src.loaders.loader import BaseLoader
+from app.src.core.interfaces.loader import BaseLoader
 
 
 class PDFLoader(BaseLoader):
@@ -23,7 +23,7 @@ class PDFLoader(BaseLoader):
     """
 
     def __init__(self, config: PDFLoaderConfig) -> None:
-        self.page_separator = config.page_separator
+        self.page_separator: str = config.page_separator
 
     def load(self, source: Path) -> list[Document]:
         path = self._validate(source)

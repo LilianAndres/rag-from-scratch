@@ -7,7 +7,7 @@ from pydantic_settings import (
 
 from app.config.models import (
     ResolverConfig, LoaderConfig, ChunkerConfig, EmbedderConfig, BackendConfig,
-    GeneratorConfig, RerankerConfig, LLMsConfig, QueryTransformerConfig,
+    GeneratorConfig, RerankerConfig, LLMsConfig, QueryTransformerConfig, ProvidersConfig,
 )
 
 CONFIG_PATH = Path(__file__).parent / "config.yaml"
@@ -22,15 +22,16 @@ class AppSettings(BaseSettings):
         env_file_encoding="utf-8",
     )
 
-    resolvers: ResolverConfig
-    loaders: LoaderConfig
-    chunker: ChunkerConfig
-    embedder: EmbedderConfig
-    backend: BackendConfig
-    generator: GeneratorConfig
-    reranker: RerankerConfig
-    llms: LLMsConfig
-    query_transformer: QueryTransformerConfig
+    resolvers: ResolverConfig = ResolverConfig()
+    loaders: LoaderConfig = LoaderConfig()
+    chunker: ChunkerConfig = ChunkerConfig()
+    embedder: EmbedderConfig = EmbedderConfig()
+    backend: BackendConfig = BackendConfig()
+    generator: GeneratorConfig = GeneratorConfig()
+    reranker: RerankerConfig = RerankerConfig()
+    providers: ProvidersConfig = ProvidersConfig()
+    query_transformer: QueryTransformerConfig = QueryTransformerConfig()
+    llms: LLMsConfig = LLMsConfig()
 
     @classmethod
     def settings_customise_sources(

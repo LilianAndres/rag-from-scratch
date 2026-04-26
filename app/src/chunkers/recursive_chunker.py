@@ -14,10 +14,12 @@ class RecursiveChunker(BaseChunker):
     DEFAULT_SEPARATORS = ["\n\n", "\n", ". ", " ", ""]
 
     def __init__(self, config: RecursiveChunkerConfig):
-        self._config = config
+        self._chunk_size: int = config.chunk_size
+        self._chunk_overlap: int = config.chunk_overlap
+        self._separators: list[str] = config.separators or self.DEFAULT_SEPARATORS
 
     def chunk(self, document: Document) -> list[Chunk]:
-        raw_splits = self._split_text(document.content, self._config.separators or self.DEFAULT_SEPARATORS)
+        raw_splits = self._split_text(document.content, self._separators)
         merged_splits = self._merge_splits(raw_splits)
         return [
             Chunk(
@@ -53,7 +55,7 @@ class RecursiveChunker(BaseChunker):
         good: list[str] = [] # splits that fit on their own
 
         for split in splits:
-            if len(split) < self._config.chunk_size:
+            if len(split) < self._chunk_size:
                 good.append(split)
             else:
                 # Too large: flush good splits first, then recurse
@@ -79,10 +81,10 @@ class RecursiveChunker(BaseChunker):
         for split in splits:
             split_len = len(split)
 
-            if current_len + split_len > self._config.chunk_size and current:
+            if current_len + split_len > self._chunk_size and current:
                 chunks.append(" ".join(current))
                 # Carry overlap: keep trailing splits that fit the window
-                while current and current_len > self._config.chunk_overlap:
+                while current and current_len > self._chunk_overlap:
                     current_len -= len(current[0])
                     current.pop(0)
 

@@ -16,7 +16,10 @@ class ChromaBackend(SearchBackend):
     """
 
     def __init__(self, config: ChromaConfig, embedder: BaseEmbedder):
-        self._config = config
+        self._host: str = config.host
+        self._port: int = config.port
+        self._collection_name: str = config.collection_name
+        self._distance_function: str = config.distance_function
         self._embedder = embedder
         self._client: AsyncClientAPI | None = None
         self._collection: AsyncCollection | None = None
@@ -24,12 +27,12 @@ class ChromaBackend(SearchBackend):
     async def _get_collection(self) -> AsyncCollection:
         if self._collection is None:
             self._client = await AsyncHttpClient(
-                host=self._config.host,
-                port=self._config.port,
+                host=self._host,
+                port=self._port,
             )
             self._collection = await self._client.get_or_create_collection(
-                name=self._config.collection_name,
-                metadata={"hnsw:space": self._config.distance_function},
+                name=self._collection_name,
+                metadata={"hnsw:space": self._distance_function},
             )
         return self._collection
 
@@ -110,7 +113,7 @@ class ChromaBackend(SearchBackend):
         Convert Chroma distance to similarity score [0, 1]
         based on configured distance function.
         """
-        space = getattr(self._config, "distance_function", "cosine")
+        space = self._distance_function
 
         match space:
             case "cosine":

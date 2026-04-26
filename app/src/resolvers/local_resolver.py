@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from app.config.models.resolver import LocalResolverConfig
-from app.src.resolvers import BaseSourceResolver
+from app.src.core.interfaces.resolver import BaseSourceResolver
 
 
 class LocalResolver(BaseSourceResolver):

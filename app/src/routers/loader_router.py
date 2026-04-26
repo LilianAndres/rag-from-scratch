@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from app.src.loaders.loader import BaseLoader
+from app.src.core.interfaces.loader import BaseLoader
 from app.src.registry import BaseRegistry
 
 
-class DefaultLoaderManager:
+class DefaultLoaderRouter:
     """
     Handles loading files into Document objects using registered loaders.
     """

@@ -8,7 +8,7 @@ class PromptLoader:
     Loads and renders Jinja2 prompt templates from the prompts directory.
     """
 
-    def __init__(self, prompts_dir: str | Path = "src/prompts"):
+    def __init__(self, prompts_dir: str | Path = "app/src/prompts/templates") -> None:
         self._env = Environment(
             loader=FileSystemLoader(str(prompts_dir)),
             trim_blocks=True,
