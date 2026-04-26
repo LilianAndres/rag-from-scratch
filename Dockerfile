@@ -19,4 +19,4 @@ COPY . .
 ENV PORT=8000
 
 # Run the API
-CMD ["python", "main.py"]
+CMD ["python", "-m", "api.main"]

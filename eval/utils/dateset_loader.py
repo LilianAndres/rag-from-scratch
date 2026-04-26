@@ -1,13 +1,7 @@
-from dataclasses import dataclass
+import yaml
 from pathlib import Path
 
-import yaml
-
-
-@dataclass
-class EvalSample:
-    question: str
-    ground_truth: str
+from eval.domain import EvalSample
 
 
 def load_dataset(path: Path) -> list[EvalSample]:
@@ -16,8 +10,10 @@ def load_dataset(path: Path) -> list[EvalSample]:
 
     return [
         EvalSample(
+            id=item.get("id", f"q{i+1:03d}"),
             question=item["question"],
             ground_truth=item["ground_truth"],
+            tags=item.get("tags", []),
         )
-        for item in data["questions"]
+        for i, item in enumerate(data["questions"])
     ]

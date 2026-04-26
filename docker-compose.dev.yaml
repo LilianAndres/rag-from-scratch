@@ -1,26 +1,17 @@
 services:
-  api:
-    build: .
-    ports:
-      - "8000:8000"
-    environment:
-      - PORT=8000
-    depends_on:
-      - chroma
-      - ollama
-      - infinity
-
   chroma:
     image: chromadb/chroma
     ports:
-      - "8001:8000"
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
 
   ollama:
     image: ollama/ollama
     ports:
       - "11434:11434"
     volumes:
-      - ollama:/root/.ollama
+      - ollama-data:/root/.ollama
 
   infinity:
     image: michaelf34/infinity:latest
@@ -34,4 +25,5 @@ services:
       --port 7997
 
 volumes:
-  ollama:
+  chroma_data:
+  ollama-data:

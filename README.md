@@ -20,24 +20,24 @@ Documents → Load → Chunk → Embed → Store
 
 The architecture is built around:
 
-- **Interfaces** → define behavior  
-- **Factories** → instantiate components  
+- **Interfaces** → define behavior
+- **Factories** → instantiate components
 - **Config-driven system** → everything controlled in one place
 
 ---
 
 ## 🔥 Features
 
-- 🔌 **Pluggable vector backends** 
+- 🔌 **Pluggable vector backends**
 - 🤖 **Multiple LLM providers**
 - 🧠 **Embeddings**
 - 🔍 **Query transformation**
 - 📊 **Reranking**
 - 📄 **Document loaders**
-- 🌐 **FastAPI REST API**  
+- 🌐 **FastAPI REST API**
 - ⚙️ **Fully configurable**
-- 🐳 **Production-ready**  
-- 🧪 **Offline evaluation module**  
+- 🐳 **Docker infrastructure**
+- 🧪 **Offline evaluation module**
 
 ---
 
@@ -48,6 +48,7 @@ The architecture is built around:
 ├── api/                        # FastAPI layer (HTTP interface)
 │   ├── app.py                  # FastAPI app creation
 │   ├── dependencies.py         # Dependency injection
+│   ├── main.py                 # API entry point
 │   ├── schemas.py              # API schemas
 │   └── routers/
 │       ├── ingestion.py        # POST /ingest
@@ -55,8 +56,8 @@ The architecture is built around:
 │
 ├── app/
 │   ├── config/
-│   │   ├── config.yaml         # ⚙️ Main configuration
-│   │   ├── settings.py         # Env + settings loader
+│   │   ├── config.yaml         # ⚙️ Main configuration (app behaviour)
+│   │   ├── settings.py         # Settings loader
 │   │   └── models/             # Typed config models
 │   │
 │   └── src/
@@ -82,95 +83,46 @@ The architecture is built around:
 │       └── resolvers/          # File resolution
 │
 ├── eval/                       # 🧪 Offline evaluation module
-│   ├── dataset/                # Test questions
-│   ├── eval_runner.py
-│   ├── ragas_evaluator.py
-│   ├── eval_reporter.py
-│   └── main.py                 # Entry point
+│   ├── config/
+│   │   ├── config.yaml         # ⚙️ Eval configuration
+│   │   └── settings.py         # Eval settings loader
+│   ├── dataset/                # Test questions (YAML)
+│   ├── domain/                 # Eval domain models
+│   ├── evaluators/             # RAGAS evaluator
+│   ├── metrics/                # Latency, token coverage
+│   ├── reporters/              # Console, JSON, CSV reporters
+│   ├── runner.py               # Pipeline batch runner
+│   └── main.py                 # Eval entry point
 │
-├── main.py                     # App entrypoint (runs API)
-├── Dockerfile
-├── docker-compose.dev.yml      # Local dev infrastructure (optional)
+├── .env.example                # 👉 Copy to .env.secrets and fill in credentials
+├── .env.local                  # Topology for local dev (committed, no secrets)
+├── .env.providers              # Provider URLs shared by app and eval (committed)
+├── docker-compose.dev.yaml     # Local dev infrastructure (Chroma, Ollama, Infinity)
+├── Dockerfile                  # Production image
 └── pyproject.toml
 ```
 
-## Pipelines
-
-### Ingestion Pipeline
-
-Transforms raw documents into indexed, searchable chunks:
-
-1. **Load** - reads source files via a `LoaderManager` (PDF, plain text, …)
-2. **Chunk** - splits documents into overlapping text chunks
-3. **Embed** — encodes chunks into dense vectors
-4. **Store** - upserts chunks + vectors into the configured backend
-
-### RAG Pipeline
-
-Answers a user query using retrieved context:
-
-1. **Transform** - optionally rewrites or expands the query (multi-query)
-2. **Retrieve** - fetches top-k relevant chunks from the backend
-3. **Rerank** - optionally re-scores retrieved chunks with a cross-encoder
-4. **Generate** - calls the LLM with a context-augmented prompt
-
 ---
 
-### ⚙️ Configuration
+## ⚙️ Configuration
 
-All components are configured in:
+### Application settings
 
-```
-app/config/config.yaml
-```
-
-Example:
+Controls how the RAG pipeline behaves: chunk size, models, reranking, prompt templates, etc. Environment-agnostic — no hostnames here.
 
 ```yaml
-providers:
-  ollama:
-    base_url: "http://localhost:11434"
-  infinity:
-    base_url: "http://localhost:7997"
-
-llms:
-  profiles:
-    fast:
-      provider: ollama
-      ollama:
-        model: llama3:8b
-        temperature: 0.0
-        max_tokens: 512
-        timeout: 360.0
-
-resolvers:
-  local:
-    base_path: /tmp
-
-loaders:
-  pdf:
-    page_separator: "\n"
+# app/config/config.yaml
 
 chunker:
   provider: recursive
   recursive:
     chunk_size: 800
     chunk_overlap: 100
-    separators: null
 
 embedder:
   provider: infinity
   infinity:
     model: BAAI/bge-small-en-v1.5
-    timeout: 60.0
-
-backend:
-  type: chroma
-  chroma:
-    host: localhost
-    port: 8001
-    collection_name: documents
-    distance_function: cosine
 
 reranker:
   enabled: true
@@ -178,24 +130,27 @@ reranker:
   infinity:
     model: cross-encoder/ms-marco-MiniLM-L-6-v2
     top_n: 5
-    timeout: 60.0
 
 generator:
   llm_profile: fast
-  prompts_dir: app/src/prompts/templates
   prompt_template: rag.j2
 
 query_transformer:
   enabled: false
-  provider: multi-query
-  llm_profile: fast
-  prompts_dir: app/src/prompts/templates
-  multi_query:
-    n_variants: 3
-    prompt_template: multi_query.j2
 ```
 
-> Refer to `app/config/models/` for the full set of options per component Feel free to add your own.
+> Refer to `app/config/models/` for the full set of options per component.
+
+### Topology — env files
+
+Service hostnames and ports live in env files, not in YAML, so the same config works across environments without modification.
+
+| File | Purpose | Committed |
+|---|---|---|
+| `.env.secrets` | Credentials (API keys, passwords) | ❌ git-ignored |
+| `.env.local` | App topology for local dev | ✅ |
+| `.env.providers` | Provider URLs shared by app and eval | ✅ |
+| `.env.example` | Template for `.env.secrets` | ✅ |
 
 ---
 
@@ -204,84 +159,93 @@ query_transformer:
 ### Prerequisites
 
 - Python 3.12+
-- Docker (optional but recommended)
-- OpenAI API key (if using OpenAI)
+- [uv](https://github.com/astral-sh/uv)
+- Docker
 
----
-
-## 🐳 Running with Docker (recommended)
+### 1. Install dependencies
 
 ```bash
 git clone https://github.com/LilianAndres/rag-from-scratch.git
 cd rag-from-scratch
-
-cp .env.example .env
-nano app/config/config.yaml
-
-docker compose -f docker-compose.dev.yaml up --build
-```
-
-The API should be available at `http://localhost:8000`.
-
----
-
-## 💻 Running Locally
-
-```bash
 uv sync
-uv run python main.py
 ```
 
-> Make sure any external services are reachable at the URLs defined in your config.
+### 2. Set up credentials
+
+```bash
+cp .env.example .env.secrets # fill in your API keys in .env.secrets
+```
+
+### 3. Start infrastructure
+
+```bash
+docker compose -f docker-compose.dev.yaml up
+```
+
+This starts **Chroma**, **Ollama**, and **Infinity** locally. The API runs on your machine, not in Docker.
+
+> On first run, you might need to pull the Ollama image using `docker exec -it <project>-ollama-1 ollama pull llama3:8b`. This may take a few minutes.
+
+### 4. Start the API
+
+```bash
+uv run serve
+```
+
+The API is available at `http://localhost:8001`. Documentation at `http://localhost:8001/docs`.
 
 ---
 
-## 🧪 Evaluation Module (offline)
+## 🧪 Evaluation
+
+The evaluation module runs **offline** — it instantiates the RAG pipeline directly without going through the HTTP API. It requires documents to already be ingested into Chroma.
+
+**Typical workflow:**
 
 ```bash
-uv run python eval/main.py
+# 1. Ingest your documents (once, or when the corpus changes)
+curl -X POST http://localhost:8000/ingest ...
+
+# 2. Run evaluation (as many times as needed against the same corpus)
+uv run eval
 ```
 
-Used for benchmarking, testing configurations, and regression checks.
+Chroma data is persisted in a named Docker volume, so you don't need to re-ingest between sessions or restarts.
+
+Configure the evaluation in `eval/config/config.yaml` (judge model, dataset path, reporters, etc.).
 
 ---
 
 ## 🔌 API Reference
 
-The documentation is available at `http://localhost:8000/docs`.
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/ingest` | Ingest documents into the vector store |
+| `POST` | `/search` | Query the RAG pipeline |
+
+Full interactive documentation: `http://localhost:8000/docs`
 
 ---
 
 ## 🧠 Architecture Principles
 
-- Interface-driven design  
-- Dependency injection  
-- Factory pattern  
-- Config over code  
-- Modular pipelines  
+- Interface-driven design
+- Dependency injection
+- Factory pattern
+- Config over code
+- Modular pipelines
 
 ---
 
 ## 🛠️ Extending the system
 
-1. Implement interface (`core/interfaces/`)  
-2. Add implementation in `src/`  
-3. Register in factory  
-4. Add config model  
-5. Update `config.yaml`  
+1. Implement the interface (`core/interfaces/`)
+2. Add the implementation in `src/`
+3. Register it in the factory
+4. Add a config model
+5. Update `config.yaml`
 
 No core changes required.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome!
-
-- Follow existing architecture  
-- Keep components modular  
-- Add config models  
-- Run evaluation before submitting  
 
 ---
 
@@ -291,7 +255,18 @@ Contributions are welcome!
 - Add more providers (Anthropic, Google, etc.)
 - Add observability (logs, tracing)
 - Add guardrails layer (input, output)
-- Add CI/CD workflows (evaluation, docker image)
+- Add CI/CD workflows (evaluation, Docker image)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+- Follow existing architecture
+- Keep components modular
+- Add config models
+- Run evaluation before submitting
 
 ---
 

@@ -1,43 +1,35 @@
 from pathlib import Path
-
 from pydantic_settings import (
     BaseSettings, SettingsConfigDict,
     PydanticBaseSettingsSource, YamlConfigSettingsSource,
 )
-
-from app.config.models import (
-    ResolverConfig, LoaderConfig, ChunkerConfig, EmbedderConfig, BackendConfig,
-    GeneratorConfig, RerankerConfig, LLMsConfig, QueryTransformerConfig, ProvidersConfig,
-)
+from app.config.models.provider import ProvidersConfig
+from eval.config.models import JudgeLLMConfig
 
 CONFIG_PATH = Path(__file__).parent / "config.yaml"
 ROOT = Path(__file__).parent.parent.parent
 
-class AppSettings(BaseSettings):
+class EvalSettings(BaseSettings):
     model_config = SettingsConfigDict(
         env_nested_delimiter="__",
         env_file=[
             str(ROOT / ".env.secrets"),
             str(ROOT / ".env.providers"),
-            str(ROOT / ".env.local"),
         ],
         env_file_encoding="utf-8",
     )
 
-    app_env: str = "dev"
-    app_port: int = 8000
+    dataset_path: Path = Path("eval/dataset/questions.yaml")
+    results_dir: Path = Path("eval/results")
+    batch_size: int = 5
 
-    resolvers: ResolverConfig = ResolverConfig()
-    loaders: LoaderConfig = LoaderConfig()
-    chunker: ChunkerConfig = ChunkerConfig()
-    embedder: EmbedderConfig = EmbedderConfig()
-    reranker: RerankerConfig = RerankerConfig()
+    top_k: int = 5
+    top_n: int | None = None
+
+    judge: JudgeLLMConfig = JudgeLLMConfig()
     providers: ProvidersConfig = ProvidersConfig()
-    query_transformer: QueryTransformerConfig = QueryTransformerConfig()
-    llms: LLMsConfig = LLMsConfig()
 
-    backend: BackendConfig
-    generator: GeneratorConfig
+    reporters: list[str] = ["json", "csv", "console"]
 
     @classmethod
     def settings_customise_sources(

@@ -22,7 +22,7 @@ class InfinityEmbedder(BaseEmbedder):
             return []
 
         headers = {}
-        if self._api_key is not None:
+        if self._api_key is not None and self._api_key != "":
             headers["Authorization"] = f"Bearer {self._api_key.get_secret_value()}"
 
         async with httpx.AsyncClient() as client:

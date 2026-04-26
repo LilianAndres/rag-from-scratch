@@ -33,6 +33,8 @@ virtualenv/
 .env
 .env.*
 !.env.example
+!.env.local
+!.env.providers
 *.env
 secrets.yaml
 secrets.yml

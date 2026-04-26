@@ -1,15 +1,18 @@
 dataset_path: eval/dataset/questions.yaml
-output_path: eval/results/latest.json
+results_dir: /tmp
+batch_size: 5
 
 top_k: 5
-top_n: null
 
 providers:
   ollama:
-    base_url: http://localhost:11434
+    base_url: "http://localhost:11434"
 
 judge:
   provider: ollama
   ollama:
     model: llama3:8b
     temperature: 0.0
+
+reporters:
+  - csv

@@ -38,8 +38,8 @@ embedder:
 backend:
   type: chroma
   chroma:
-    host: localhost
-    port: 8001
+    host: chroma
+    port: 8000
     collection_name: documents
     distance_function: cosine
 
