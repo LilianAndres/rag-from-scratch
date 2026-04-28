@@ -1,4 +1,4 @@
-from .judge import JudgeLLMConfig
+from .metric import MetricConfig
 
 
-__all__ = ["JudgeLLMConfig"]
+__all__ = ["MetricConfig"]

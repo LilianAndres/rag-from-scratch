@@ -86,7 +86,6 @@ The architecture is built around:
 │   ├── config/
 │   │   ├── config.yaml         # ⚙️ Eval configuration
 │   │   └── settings.py         # Eval settings loader
-│   ├── dataset/                # Test questions (YAML)
 │   ├── domain/                 # Eval domain models
 │   ├── evaluators/             # RAGAS evaluator
 │   ├── metrics/                # Latency, token coverage
@@ -141,19 +140,6 @@ query_transformer:
 
 > Refer to `app/config/models/` for the full set of options per component.
 
-### Topology — env files
-
-Service hostnames and ports live in env files, not in YAML, so the same config works across environments without modification.
-
-| File | Purpose | Committed |
-|---|---|---|
-| `.env.secrets` | Credentials (API keys, passwords) | ❌ git-ignored |
-| `.env.local` | App topology for local dev | ✅ |
-| `.env.providers` | Provider URLs shared by app and eval | ✅ |
-| `.env.example` | Template for `.env.secrets` | ✅ |
-
----
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -173,8 +159,10 @@ uv sync
 ### 2. Set up credentials
 
 ```bash
-cp .env.example .env.secrets # fill in your API keys in .env.secrets
+cp .env.example .env
 ```
+
+Then fill the `.env` file with your own credentials.
 
 ### 3. Start infrastructure
 
@@ -182,7 +170,7 @@ cp .env.example .env.secrets # fill in your API keys in .env.secrets
 docker compose -f docker-compose.dev.yaml up
 ```
 
-This starts **Chroma**, **Ollama**, and **Infinity** locally. The API runs on your machine, not in Docker.
+This starts the services listed in `docker-compose.dev.yaml`. The API runs on your machine, not in Docker.
 
 > On first run, you might need to pull the Ollama image using `docker exec -it <project>-ollama-1 ollama pull llama3:8b`. This may take a few minutes.
 
@@ -198,21 +186,26 @@ The API is available at `http://localhost:8001`. Documentation at `http://localh
 
 ## 🧪 Evaluation
 
-The evaluation module runs **offline** — it instantiates the RAG pipeline directly without going through the HTTP API. It requires documents to already be ingested into Chroma.
+The evaluation module runs **offline** — it instantiates the RAG pipeline directly without going through the HTTP API. It requires documents to already be ingested into the configured data stores.
 
-**Typical workflow:**
+1. Configure the evaluation in `eval/config/config.yaml` (judge model, dataset path, reporters, etc.).
+2. Prepare carefully your own custom question set.
+3. Run `uv run eval` in a terminal.
 
-```bash
-# 1. Ingest your documents (once, or when the corpus changes)
-curl -X POST http://localhost:8000/ingest ...
+Note that the question set is expected to have the following format.
 
-# 2. Run evaluation (as many times as needed against the same corpus)
-uv run eval
+```yaml
+questions:
+  - id: q001
+    question: "What is the Transformer model?"
+    ground_truth: "The Transformer is a model architecture that relies entirely on attention mechanisms, dispensing with recurrence and convolutions."
+    tags: [architecture]
+
+  - id: q002
+    question: "What attention mechanism does the Transformer use?"
+    ground_truth: "The Transformer uses scaled dot-product attention and multi-head attention mechanisms."
+    tags: [architecture, attention]
 ```
-
-Chroma data is persisted in a named Docker volume, so you don't need to re-ingest between sessions or restarts.
-
-Configure the evaluation in `eval/config/config.yaml` (judge model, dataset path, reporters, etc.).
 
 ---
 

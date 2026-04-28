@@ -16,10 +16,10 @@ class JsonReporter(Reporter):
             "run_id": run.run_id,
             "timestamp": run.timestamp.isoformat(),
             "config": run.config_snapshot,
-            "aggregate": {k: round(v, 4) for k, v in run.aggregate.items()},
+            "aggregate": {k: round(v, 4) for k, v in run.scores_by_metric.items()},
             "by_tag": {
                 tag: {k: round(v, 4) for k, v in scores.items()}
-                for tag, scores in run.by_tag.items()
+                for tag, scores in run.scores_by_tag.items()
             },
             "questions": [
                 {

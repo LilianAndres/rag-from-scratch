@@ -3,8 +3,10 @@ from pydantic_settings import (
     BaseSettings, SettingsConfigDict,
     PydanticBaseSettingsSource, YamlConfigSettingsSource,
 )
-from app.config.models.provider import ProvidersConfig
-from eval.config.models import JudgeLLMConfig
+
+from app.config.models import ProvidersConfig
+from app.config.models.llm import LLMProfileConfig
+from eval.config.models import MetricConfig
 
 CONFIG_PATH = Path(__file__).parent / "config.yaml"
 ROOT = Path(__file__).parent.parent.parent
@@ -12,24 +14,23 @@ ROOT = Path(__file__).parent.parent.parent
 class EvalSettings(BaseSettings):
     model_config = SettingsConfigDict(
         env_nested_delimiter="__",
-        env_file=[
-            str(ROOT / ".env.secrets"),
-            str(ROOT / ".env.providers"),
-        ],
+        env_file=[str(ROOT / ".env")],
         env_file_encoding="utf-8",
     )
 
-    dataset_path: Path = Path("eval/dataset/questions.yaml")
-    results_dir: Path = Path("eval/results")
+    dataset_path: Path
+    results_dir: Path
     batch_size: int = 5
 
     top_k: int = 5
     top_n: int | None = None
 
-    judge: JudgeLLMConfig = JudgeLLMConfig()
     providers: ProvidersConfig = ProvidersConfig()
+    judge: LLMProfileConfig = LLMProfileConfig()
 
-    reporters: list[str] = ["json", "csv", "console"]
+    metrics: list[MetricConfig] = []
+
+    reporters: list[str] = ["console"]
 
     @classmethod
     def settings_customise_sources(

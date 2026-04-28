@@ -16,16 +16,12 @@ ROOT = Path(__file__).parent.parent.parent
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
         env_nested_delimiter="__",
-        env_file=[
-            str(ROOT / ".env.secrets"),
-            str(ROOT / ".env.providers"),
-            str(ROOT / ".env.local"),
-        ],
+        env_file=[str(ROOT / ".env")],
         env_file_encoding="utf-8",
     )
 
-    app_env: str = "dev"
-    app_port: int = 8000
+    env: str = "dev"
+    port: int = 8000
 
     resolvers: ResolverConfig = ResolverConfig()
     loaders: LoaderConfig = LoaderConfig()

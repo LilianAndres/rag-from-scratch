@@ -8,7 +8,7 @@ _W = 72
 class ConsoleReporter(Reporter):
 
     def write(self, run: EvalRun, output_dir: Path | None = None) -> None:
-        agg = run.aggregate
+        agg = run.scores_by_metric
         results = run.question_results
         metric_keys = list(agg.keys())
 
@@ -28,10 +28,10 @@ class ConsoleReporter(Reporter):
         print(f"\n  {'avg latency':<28}  {avg_lat:.0f} ms")
 
         # by tag
-        if run.by_tag:
+        if run.scores_by_tag:
             print(f"\n  BY TAG")
             print(f"  {'─' * 44}")
-            for tag, scores in run.by_tag.items():
+            for tag, scores in run.scores_by_tag.items():
                 tag_mean = sum(scores.values()) / len(scores)
                 print(f"  [{tag}]  mean={tag_mean:.4f}")
                 for k, v in scores.items():

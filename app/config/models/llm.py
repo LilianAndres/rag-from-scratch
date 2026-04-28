@@ -15,9 +15,9 @@ class OllamaProfileConfig(BaseModel):
 
 
 class LLMProfileConfig(BaseModel):
-    provider: str
-    openai: OpenAIProfileConfig | None = None
-    ollama: OllamaProfileConfig | None = None
+    provider: str = "ollama"
+    openai: OpenAIProfileConfig = OpenAIProfileConfig()
+    ollama: OllamaProfileConfig = OllamaProfileConfig()
 
 
 class LLMsConfig(BaseModel):

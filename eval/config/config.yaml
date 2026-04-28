@@ -1,5 +1,5 @@
-dataset_path: eval/dataset/questions.yaml
-results_dir: /tmp
+dataset_path: /tmp/questions.yaml
+results_dir: /tmp/results
 batch_size: 5
 
 top_k: 5
@@ -14,5 +14,14 @@ judge:
     model: llama3:8b
     temperature: 0.0
 
+metrics:
+  - name: faithfulness
+  - name: answer_relevancy
+  - name: context_recall
+  - name: factual_correctness
+  - name: latency
+    params:
+      threshold_ms: 2000.0
+
 reporters:
-  - csv
+  - json
