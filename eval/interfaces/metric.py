@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from eval.domain import PipelineOutput
+from eval.domain.pipeline_output import PipelineOutput
 
 
 class Metric(ABC):

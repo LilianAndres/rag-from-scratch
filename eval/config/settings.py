@@ -4,8 +4,9 @@ from pydantic_settings import (
     PydanticBaseSettingsSource, YamlConfigSettingsSource,
 )
 
-from app.config.models import ProvidersConfig
+from app.config.models.embedder import EmbedderConfig
 from app.config.models.llm import LLMProfileConfig
+from app.config.models.provider import ProvidersConfig
 from eval.config.models import MetricConfig
 
 CONFIG_PATH = Path(__file__).parent / "config.yaml"
@@ -16,6 +17,7 @@ class EvalSettings(BaseSettings):
         env_nested_delimiter="__",
         env_file=[str(ROOT / ".env")],
         env_file_encoding="utf-8",
+        extra="ignore",
     )
 
     dataset_path: Path
@@ -25,8 +27,10 @@ class EvalSettings(BaseSettings):
     top_k: int = 5
     top_n: int | None = None
 
-    providers: ProvidersConfig = ProvidersConfig()
-    judge: LLMProfileConfig = LLMProfileConfig()
+    providers: ProvidersConfig = ProvidersConfig() # shared configuration with app/
+
+    judge_llm: LLMProfileConfig = LLMProfileConfig()
+    judge_embeddings: EmbedderConfig = EmbedderConfig()
 
     metrics: list[MetricConfig] = []
 

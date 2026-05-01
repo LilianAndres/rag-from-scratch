@@ -4,7 +4,8 @@ from typing import Callable
 
 from app.src.core.search.search_query import SearchQuery
 from app.src.pipelines.rag_pipeline import RAGPipeline
-from eval.domain import EvalSample, PipelineOutput
+from eval.domain.eval_sample import EvalSample
+from eval.domain.pipeline_output import PipelineOutput
 
 
 async def _run_single(

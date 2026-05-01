@@ -1,7 +1,8 @@
 import csv
 from pathlib import Path
-from eval.domain import EvalRun
-from eval.interfaces import Reporter
+
+from eval.domain.eval_run import EvalRun
+from eval.interfaces.reporter import Reporter
 
 
 class CsvReporter(Reporter):
@@ -15,7 +16,7 @@ class CsvReporter(Reporter):
         path = output_dir / "results.csv"
 
         metric_keys = list(run.question_results[0].scores.keys())
-        fieldnames = ["id", "question", "tags", "latency_ms", "mean_score"] + metric_keys
+        fieldnames = ["id", "question", "latency_ms", "mean_score"] + metric_keys
 
         with open(path, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -24,7 +25,6 @@ class CsvReporter(Reporter):
                 writer.writerow({
                     "id": r.sample_id,
                     "question": r.question[:100],
-                    "tags": "|".join(r.tags),
                     "latency_ms": round(r.latency_ms, 1),
                     "mean_score": round(r.mean_score, 4),
                     **{k: round(v, 4) for k, v in r.scores.items()},

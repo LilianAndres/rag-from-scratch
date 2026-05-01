@@ -1,5 +1,5 @@
-dataset_path: /tmp/questions.yaml
-results_dir: /tmp/results
+dataset_path: /tmp/data/questions.yaml
+results_dir: /tmp/data/results
 batch_size: 5
 
 top_k: 5
@@ -7,12 +7,18 @@ top_k: 5
 providers:
   ollama:
     base_url: "http://localhost:11434"
+  infinity:
+    base_url: "http://localhost:7997"
 
-judge:
+judge_llm:
   provider: ollama
   ollama:
     model: llama3:8b
-    temperature: 0.0
+
+judge_embeddings:
+  provider: infinity
+  infinity:
+    model: BAAI/bge-small-en-v1.5
 
 metrics:
   - name: faithfulness

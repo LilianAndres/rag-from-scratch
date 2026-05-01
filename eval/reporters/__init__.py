@@ -1,4 +1,4 @@
-from eval.interfaces import Reporter
+from eval.interfaces.reporter import Reporter
 from eval.reporters.console_reporter import ConsoleReporter
 from eval.reporters.csv_reporter import CsvReporter
 from eval.reporters.json_reporter import JsonReporter

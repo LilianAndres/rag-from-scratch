@@ -20,9 +20,9 @@ Documents → Load → Chunk → Embed → Store
 
 The architecture is built around:
 
-- **Interfaces** → define behavior
-- **Factories** → instantiate components
-- **Config-driven system** → everything controlled in one place
+- **Interfaces** for behavior definition
+- **Factories** for instantiating components and injecting dependencies
+- **Config-driven system** to control everything in one place
 
 ---
 
@@ -33,7 +33,8 @@ The architecture is built around:
 - 🧠 **Embeddings**
 - 🔍 **Query transformation**
 - 📊 **Reranking**
-- 📄 **Document loaders**
+- 🔍 **Source resolution**
+- 📄 **Document (streamable) parsing**
 - 🌐 **FastAPI REST API**
 - ⚙️ **Fully configurable**
 - 🐳 **Docker infrastructure**
@@ -49,7 +50,7 @@ The architecture is built around:
 │   ├── app.py                  # FastAPI app creation
 │   ├── dependencies.py         # Dependency injection
 │   ├── main.py                 # API entry point
-│   ├── schemas.py              # API schemas
+│   ├── schemas/                # API schemas
 │   └── routers/
 │       ├── ingestion.py        # POST /ingest
 │       └── search.py           # POST /search
@@ -61,16 +62,17 @@ The architecture is built around:
 │   │   └── models/             # Typed config models
 │   │
 │   └── src/
-│       ├── backends/           # Vector stores (Chroma, ELK, Hybrid)
+│       ├── backends/           # Vector stores
 │       ├── chunkers/           # Text splitting
 │       ├── embedders/          # Embedding providers
 │       ├── llms/               # LLM providers
-│       ├── loaders/            # Document loaders (PDF, etc.)
+│       ├── parsers/            # Document parsers
 │       ├── query_transformers/ # Query rewriting
 │       ├── rerankers/          # Reranking logic
 │       ├── generators/         # Answer generation
 │       ├── pipelines/          # Ingestion & RAG pipelines
 │       ├── factories/          # Component factories
+│       ├── registries/         # Component registries
 │       ├── core/               # Domain + interfaces
 │       │   ├── domain/
 │       │   ├── interfaces/
@@ -80,22 +82,22 @@ The architecture is built around:
 │       ├── prompts/            # Jinja2 templates
 │       │   ├── rag.j2
 │       │   └── multi_query.j2
-│       └── resolvers/          # File resolution
+│       └── resolvers/          # Source resolution
 │
 ├── eval/                       # 🧪 Offline evaluation module
 │   ├── config/
 │   │   ├── config.yaml         # ⚙️ Eval configuration
 │   │   └── settings.py         # Eval settings loader
 │   ├── domain/                 # Eval domain models
-│   ├── evaluators/             # RAGAS evaluator
+│   ├── interfaces/             # Evaluation interfaces
+│   ├── factories/              # RAGAS component factories
+│   ├── evaluators/             # Generic evaluator
 │   ├── metrics/                # Latency, token coverage
 │   ├── reporters/              # Console, JSON, CSV reporters
 │   ├── runner.py               # Pipeline batch runner
 │   └── main.py                 # Eval entry point
 │
 ├── .env.example                # 👉 Copy to .env.secrets and fill in credentials
-├── .env.local                  # Topology for local dev (committed, no secrets)
-├── .env.providers              # Provider URLs shared by app and eval (committed)
 ├── docker-compose.dev.yaml     # Local dev infrastructure (Chroma, Ollama, Infinity)
 ├── Dockerfile                  # Production image
 └── pyproject.toml
@@ -188,6 +190,9 @@ The API is available at `http://localhost:8001`. Documentation at `http://localh
 
 The evaluation module runs **offline** — it instantiates the RAG pipeline directly without going through the HTTP API. It requires documents to already be ingested into the configured data stores.
 
+The evaluation module is currently built on top of RAGAS for metric computation. However, the architecture is designed to be provider-agnostic: the underlying interfaces allow easy replacement of RAGAS or integration of alternative evaluation backends in the future without major refactoring.
+In addition, the system supports extensibility through custom metrics (e.g. LatencyMetric) alongside built-in RAGAS metrics, enabling the evaluation pipeline to be tailored to specific use cases or production requirements.
+
 1. Configure the evaluation in `eval/config/config.yaml` (judge model, dataset path, reporters, etc.).
 2. Prepare carefully your own custom question set.
 3. Run `uv run eval` in a terminal.
@@ -199,12 +204,10 @@ questions:
   - id: q001
     question: "What is the Transformer model?"
     ground_truth: "The Transformer is a model architecture that relies entirely on attention mechanisms, dispensing with recurrence and convolutions."
-    tags: [architecture]
 
   - id: q002
     question: "What attention mechanism does the Transformer use?"
     ground_truth: "The Transformer uses scaled dot-product attention and multi-head attention mechanisms."
-    tags: [architecture, attention]
 ```
 
 ---
@@ -216,7 +219,7 @@ questions:
 | `POST` | `/ingest` | Ingest documents into the vector store |
 | `POST` | `/search` | Query the RAG pipeline |
 
-Full interactive documentation: `http://localhost:8000/docs`
+Full interactive documentation: `http://localhost:8001/docs`
 
 ---
 

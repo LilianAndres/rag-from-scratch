@@ -1,5 +1,5 @@
-from eval.domain import PipelineOutput
-from eval.interfaces import Metric
+from eval.domain.pipeline_output import PipelineOutput
+from eval.interfaces.metric import Metric
 
 
 class TokenCoverageMetric(Metric):

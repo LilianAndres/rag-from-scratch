@@ -23,18 +23,3 @@ class EvalRun:
             k: sum(r.scores.get(k, 0.0) for r in self.question_results) / n
             for k in keys
         }
-
-    @property
-    def scores_by_tag(self) -> dict[str, dict[str, float]]:
-        """Aggregate scores grouped by tag."""
-        tag_groups: dict[str, list[QuestionResult]] = {}
-        for r in self.question_results:
-            for tag in r.tags:
-                tag_groups.setdefault(tag, []).append(r)
-        return {
-            tag: {
-                k: sum(r.scores.get(k, 0.0) for r in group) / len(group)
-                for k in group[0].scores.keys()
-            }
-            for tag, group in tag_groups.items()
-        }

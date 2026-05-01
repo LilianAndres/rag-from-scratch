@@ -5,7 +5,8 @@ from app.config.settings import AppSettings
 from app.src.factories.app_factory import ApplicationFactory
 
 from eval.config.settings import EvalSettings
-from eval.domain import EvalRun, EvalSample
+from eval.domain.eval_run import EvalRun
+from eval.domain.eval_sample import EvalSample
 from eval.factories.evaluator_factory import EvaluatorFactory
 from eval.reporters import build_reporters
 from eval.runner import run_pipeline_batch
@@ -14,22 +15,27 @@ from eval.utils.dateset_loader import load_dataset
 
 def _make_run_id(settings: EvalSettings) -> str:
     ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
-    provider = settings.judge.provider
-    judge_cfg = getattr(settings.judge, provider, None)
-    model = getattr(judge_cfg, "model", "unknown").replace(":", "-").replace("/", "-")
+
+    provider = settings.judge_llm.provider
+    provider_cfg = getattr(settings.judge_llm, provider, None)
+
+    model = getattr(provider_cfg, "model", "unknown")
+    model = model.replace(":", "-").replace("/", "-")
+
     return f"{ts}_{provider}_{model}"
 
 
 def _config_snapshot(settings: EvalSettings) -> dict:
-    provider = settings.judge.provider
-    judge_cfg = getattr(settings.judge, provider, None)
+    provider = settings.judge_llm.provider
+    provider_cfg = getattr(settings.judge_llm, provider, None)
+
     return {
         "dataset": str(settings.dataset_path),
         "top_k": settings.top_k,
         "top_n": settings.top_n,
         "batch_size": settings.batch_size,
         "judge_provider": provider,
-        "judge_model": getattr(judge_cfg, "model", "?"),
+        "judge_model": getattr(provider_cfg, "model", "?"),
     }
 
 
@@ -43,7 +49,6 @@ async def run(settings: EvalSettings) -> None:
     print(f"{'═' * 60}")
 
     samples: list[EvalSample] = load_dataset(settings.dataset_path)
-    samples_by_id = {s.id: s for s in samples}
     print(f"  Loaded {len(samples)} samples")
 
     app_settings = AppSettings()
@@ -66,7 +71,7 @@ async def run(settings: EvalSettings) -> None:
 
     print("\n  Scoring ...")
     evaluator = EvaluatorFactory(settings).create()
-    question_results = await evaluator.evaluate(outputs, samples_by_id)
+    question_results = await evaluator.evaluate(outputs)
 
     eval_run = EvalRun(
         run_id=run_id,

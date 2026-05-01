@@ -1,5 +1,6 @@
 from ragas.metrics.collections import AnswerRelevancy
-from eval.domain import PipelineOutput
+
+from eval.domain.pipeline_output import PipelineOutput
 from eval.interfaces.metric import Metric
 
 

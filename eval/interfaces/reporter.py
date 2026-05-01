@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from eval.domain import EvalRun
+from eval.domain.eval_run import EvalRun
 
 
 class Reporter(ABC):

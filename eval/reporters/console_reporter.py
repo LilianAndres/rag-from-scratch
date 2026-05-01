@@ -1,6 +1,7 @@
 from pathlib import Path
-from eval.domain import EvalRun
-from eval.interfaces import Reporter
+
+from eval.domain.eval_run import EvalRun
+from eval.interfaces.reporter import Reporter
 
 _W = 72
 
@@ -26,16 +27,6 @@ class ConsoleReporter(Reporter):
             print(f"  {metric:<28}  {score:.4f}  {bar}")
         avg_lat = sum(r.latency_ms for r in results) / len(results)
         print(f"\n  {'avg latency':<28}  {avg_lat:.0f} ms")
-
-        # by tag
-        if run.scores_by_tag:
-            print(f"\n  BY TAG")
-            print(f"  {'─' * 44}")
-            for tag, scores in run.scores_by_tag.items():
-                tag_mean = sum(scores.values()) / len(scores)
-                print(f"  [{tag}]  mean={tag_mean:.4f}")
-                for k, v in scores.items():
-                    print(f"    {k:<26}  {v:.4f}")
 
         # per question
         print(f"\n  PER QUESTION")

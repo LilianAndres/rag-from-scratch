@@ -1,7 +1,8 @@
 import json
 from pathlib import Path
-from eval.domain import EvalRun
-from eval.interfaces import Reporter
+
+from eval.domain.eval_run import EvalRun
+from eval.interfaces.reporter import Reporter
 
 
 class JsonReporter(Reporter):
@@ -17,10 +18,6 @@ class JsonReporter(Reporter):
             "timestamp": run.timestamp.isoformat(),
             "config": run.config_snapshot,
             "aggregate": {k: round(v, 4) for k, v in run.scores_by_metric.items()},
-            "by_tag": {
-                tag: {k: round(v, 4) for k, v in scores.items()}
-                for tag, scores in run.scores_by_tag.items()
-            },
             "questions": [
                 {
                     "id": r.sample_id,
@@ -28,7 +25,6 @@ class JsonReporter(Reporter):
                     "answer": r.answer,
                     "ground_truth": r.ground_truth,
                     "latency_ms": round(r.latency_ms, 1),
-                    "tags": r.tags,
                     "mean_score": round(r.mean_score, 4),
                     "scores": {k: round(v, 4) for k, v in r.scores.items()},
                 }

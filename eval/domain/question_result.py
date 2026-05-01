@@ -9,7 +9,6 @@ class QuestionResult:
     ground_truth: str
     contexts: list[str]
     latency_ms: float
-    tags: list[str]
     scores: dict[str, float]
 
     @property
