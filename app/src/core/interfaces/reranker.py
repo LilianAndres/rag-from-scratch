@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.src.core import SearchResult
+from app.src.core.search.search_result import SearchResult
 
 
 class BaseReranker(ABC):

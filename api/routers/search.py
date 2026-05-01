@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from api.schemas import SearchRequest, SearchResponse, SourceResponse
 from api.dependencies import get_rag_pipeline
+from api.schemas.search import SearchResponse, SearchRequest, SourceResponse
 from app.src.pipelines.rag_pipeline import RAGPipeline
 from app.src.core.search.search_query import SearchQuery
 
@@ -21,7 +21,7 @@ async def search(
 
     sources = [
         SourceResponse(
-            chunk_id=s.chunk.id,
+            chunk_id=str(s.chunk.id),
             content=s.chunk.content,
             score=s.score,
             metadata=s.metadata,

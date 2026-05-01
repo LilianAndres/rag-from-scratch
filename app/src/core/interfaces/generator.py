@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
-from app.src.core import GenerationResult, SearchResult
+from app.src.core.generation.generation_result import GenerationResult
+from app.src.core.search.search_result import SearchResult
 
 
 class BaseGenerator(ABC):

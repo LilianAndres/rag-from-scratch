@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from app.src.core import Chunk
-from app.src.core.domain import Document
+from app.src.core.domain.document import Document
+from app.src.core.domain.chunk import Chunk
 
 
 class BaseChunker(ABC):

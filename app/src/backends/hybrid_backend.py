@@ -1,5 +1,6 @@
 import asyncio
 from collections import defaultdict
+from uuid import UUID
 
 from app.src.core.interfaces.backend import SearchBackend
 from app.src.core.domain.chunk import Chunk
@@ -33,8 +34,8 @@ class HybridBackend(SearchBackend):
         await asyncio.gather(*(b.delete(document_id) for b in self._backends))
 
     def _rrf_merge(self, all_results: list[list[SearchResult]], top_k: int) -> list[SearchResult]:
-        scores: dict[str, float] = defaultdict(float)
-        result_map: dict[str, SearchResult] = {}
+        scores: dict[UUID, float] = defaultdict(float)
+        result_map: dict[UUID, SearchResult] = {}
 
         for results in all_results:
             for rank, result in enumerate(results):

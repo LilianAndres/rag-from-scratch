@@ -1,10 +1,8 @@
 from app.config.settings import AppSettings
 from app.src.pipelines.ingestion_pipeline import IngestionPipeline
 from app.src.pipelines.rag_pipeline import RAGPipeline
-from app.src.routers.source_router import DefaultSourceRouter
-from app.src.routers.loader_router import DefaultLoaderRouter
 from app.src.factories.resolver_factory import ResolverFactory
-from app.src.factories.loader_factory import LoaderFactory
+from app.src.factories.parser_factory import ParserFactory
 from app.src.factories.chunker_factory import ChunkerFactory
 from app.src.factories.embedder_factory import EmbedderFactory
 from app.src.factories.backend_factory import BackendFactory
@@ -35,15 +33,15 @@ class ApplicationFactory:
         return LLMFactory(config, self.settings.providers).create_llm()
 
     def create_ingestion_pipeline(self) -> IngestionPipeline:
-        resolver_registry = ResolverFactory(self.settings.resolvers).build_registry()
-        loader_registry = LoaderFactory(self.settings.loaders).build_registry()
+        resolver_registry = ResolverFactory().build_registry()
+        parser_registry = ParserFactory(self.settings.parsers).build_registry()
         chunker = ChunkerFactory(self.settings.chunker).create_chunker()
         embedder = self._get_embedder()
         backend = BackendFactory(self.settings.backend).create_backend(embedder)
 
         return IngestionPipeline(
-            resolver=DefaultSourceRouter(resolver_registry),
-            loader=DefaultLoaderRouter(loader_registry),
+            resolver_registry=resolver_registry,
+            parser_registry=parser_registry,
             chunker=chunker,
             backend=backend,
         )

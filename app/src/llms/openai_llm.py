@@ -1,8 +1,8 @@
 from openai import OpenAI
 
 from app.config.models.provider import OpenAIProviderConfig
-from app.src.core.interfaces import BaseLanguageModel
 from app.config.models.llm import OpenAIProfileConfig
+from app.src.core.interfaces.llm import BaseLanguageModel
 
 
 class OpenAIClient(BaseLanguageModel):

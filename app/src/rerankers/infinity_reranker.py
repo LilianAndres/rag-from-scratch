@@ -2,8 +2,8 @@ import httpx
 
 from app.config.models.provider import InfinityProviderConfig
 from app.src.core.interfaces.reranker import BaseReranker
-from app.src.core.search import SearchResult
 from app.config.models.reranker import InfinityRerankerConfig
+from app.src.core.search.search_result import SearchResult
 
 
 class InfinityReranker(BaseReranker):

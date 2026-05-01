@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
 
@@ -51,7 +53,7 @@ class ELKBackend(SearchBackend):
         docs = [
             {
                 "_index": self._index_name,
-                "_id": chunk.id,
+                "_id": str(chunk.id),
                 "_source": self._chunk_to_source(chunk),
             }
             for chunk in chunks
@@ -78,7 +80,7 @@ class ELKBackend(SearchBackend):
             index=self._index_name,
             body={
                 "query": {
-                    "term": {"document_id": document_id}
+                    "term": {"document_id": str(document_id)}
                 }
             },
         )
@@ -112,8 +114,8 @@ class ELKBackend(SearchBackend):
         """
         raw = {
             "content": chunk.content,
-            "chunk_id": chunk.id,
-            "document_id": chunk.document_id,
+            "chunk_id": str(chunk.id),
+            "document_id": str(chunk.document_id),
             **(chunk.metadata or {}),
         }
 
@@ -128,10 +130,10 @@ class ELKBackend(SearchBackend):
         src = hit["_source"]
 
         chunk = Chunk(
-            id=src.get("chunk_id"),
+            id=UUID(src.get("chunk_id")),
             content=src["content"],
             metadata={k: v for k, v in src.items() if k not in "content"},
-            document_id=src.get("document_id"),
+            document_id=UUID(src.get("document_id")),
         )
 
         return SearchResult(chunk=chunk, score=hit["_score"], metadata=src)

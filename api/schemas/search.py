@@ -1,15 +1,6 @@
 from pydantic import BaseModel
 
 
-class IngestRequest(BaseModel):
-    sources: list[str]
-
-
-class IngestResponse(BaseModel):
-    message: str
-    ingested: list[str]
-
-
 class SearchRequest(BaseModel):
     query: str
     top_k: int = 5

@@ -1,7 +1,8 @@
 import hashlib
 
 from app.config.models.chunker import RecursiveChunkerConfig
-from app.src.core.domain import Document, Chunk
+from app.src.core.domain.chunk import Chunk
+from app.src.core.domain.document import Document
 from app.src.core.interfaces.chunker import BaseChunker
 
 
@@ -23,7 +24,6 @@ class RecursiveChunker(BaseChunker):
         merged_splits = self._merge_splits(raw_splits)
         return [
             Chunk(
-                id=self._make_chunk_id(document.id, i),
                 content=text,
                 document_id=document.id,
                 metadata={

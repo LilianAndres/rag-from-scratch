@@ -1,13 +1,11 @@
-from app.config.models import ResolverConfig
-from app.src.registry import BaseRegistry
-from app.src.resolvers import LocalResolver
+from app.src.registries.resolver_registry import ResolverRegistry
+from app.src.resolvers.local.descriptor import LocalSourceDescriptor
+from app.src.resolvers.local.resolver import LocalSourceResolver
 
 
 class ResolverFactory:
-    def __init__(self, config: ResolverConfig) -> None:
-        self._config = config
 
-    def build_registry(self) -> BaseRegistry:
-        registry = BaseRegistry()
-        registry.register("file",  LocalResolver(config=self._config.local))
+    def build_registry(self) -> ResolverRegistry:
+        registry = ResolverRegistry()
+        registry.register(LocalSourceDescriptor, LocalSourceResolver())
         return registry

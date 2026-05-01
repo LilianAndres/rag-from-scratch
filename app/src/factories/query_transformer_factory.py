@@ -1,6 +1,6 @@
-from app.config.models.query_transformer import QueryTransformerConfig
-from app.src.core.interfaces import BaseLanguageModel
-from app.src.core.interfaces.query_transformer import BaseQueryTransformer
+from app.config.models.query import QueryTransformerConfig
+from app.src.core.interfaces.llm import BaseLanguageModel
+from app.src.core.interfaces.query import BaseQueryTransformer
 from app.src.prompts.prompt_loader import PromptLoader
 
 

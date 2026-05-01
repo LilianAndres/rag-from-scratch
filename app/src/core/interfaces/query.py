@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.src.core import SearchQuery
+from app.src.core.search.search_query import SearchQuery
 
 
 class BaseQueryTransformer(ABC):

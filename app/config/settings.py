@@ -1,14 +1,16 @@
 from pathlib import Path
 
-from pydantic_settings import (
-    BaseSettings, SettingsConfigDict,
-    PydanticBaseSettingsSource, YamlConfigSettingsSource,
-)
+from pydantic_settings import BaseSettings, SettingsConfigDict, PydanticBaseSettingsSource, YamlConfigSettingsSource
 
-from app.config.models import (
-    ResolverConfig, LoaderConfig, ChunkerConfig, EmbedderConfig, BackendConfig,
-    GeneratorConfig, RerankerConfig, LLMsConfig, QueryTransformerConfig, ProvidersConfig,
-)
+from app.config.models.backend import BackendConfig
+from app.config.models.chunker import ChunkerConfig
+from app.config.models.embedder import EmbedderConfig
+from app.config.models.generator import GeneratorConfig
+from app.config.models.llm import LLMsConfig
+from app.config.models.parser import ParserConfig
+from app.config.models.provider import ProvidersConfig
+from app.config.models.query import QueryTransformerConfig
+from app.config.models.reranker import RerankerConfig
 
 CONFIG_PATH = Path(__file__).parent / "config.yaml"
 ROOT = Path(__file__).parent.parent.parent
@@ -23,8 +25,7 @@ class AppSettings(BaseSettings):
     env: str = "dev"
     port: int = 8000
 
-    resolvers: ResolverConfig = ResolverConfig()
-    loaders: LoaderConfig = LoaderConfig()
+    parsers: ParserConfig = ParserConfig()
     chunker: ChunkerConfig = ChunkerConfig()
     embedder: EmbedderConfig = EmbedderConfig()
     reranker: RerankerConfig = RerankerConfig()

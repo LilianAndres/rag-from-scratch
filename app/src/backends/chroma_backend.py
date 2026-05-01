@@ -1,4 +1,5 @@
-import uuid
+from uuid import UUID
+
 from chromadb import AsyncHttpClient, AsyncClientAPI
 from chromadb.api.models.AsyncCollection import AsyncCollection
 
@@ -45,7 +46,7 @@ class ChromaBackend(SearchBackend):
         texts = [chunk.content for chunk in chunks]
         embeddings = await self._embedder.embed_texts(texts)
 
-        ids = [chunk.id or str(uuid.uuid4()) for chunk in chunks]
+        ids = [str(chunk.id) for chunk in chunks]
 
         metadatas = [
             self._chunk_metadata(chunk, chunk_id)
@@ -81,7 +82,12 @@ class ChromaBackend(SearchBackend):
 
         for chunk_id, doc, meta, distance in zip(ids, docs, metas, distances):
             score = self._distance_to_score(distance)
-            chunk = Chunk(id=chunk_id, document_id=meta.get("document_id"), content=doc, metadata=meta)
+            chunk = Chunk(
+                id=UUID(chunk_id),
+                document_id=UUID(meta.get("document_id")),
+                content=doc,
+                metadata=meta,
+            )
             results.append(SearchResult(chunk=chunk, score=score, metadata=meta))
 
         return results
@@ -97,8 +103,8 @@ class ChromaBackend(SearchBackend):
         Only primitive values allowed.
         """
         raw = {
-            "chunk_id": chunk_id,
-            "document_id": chunk.document_id,
+            "chunk_id": str(chunk_id),
+            "document_id": str(chunk.document_id),
             **(chunk.metadata or {}),
         }
 

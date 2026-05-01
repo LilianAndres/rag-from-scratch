@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Any
 
-from app.src.core import SearchResult
+from app.src.core.search.search_result import SearchResult
 
 
 @dataclass

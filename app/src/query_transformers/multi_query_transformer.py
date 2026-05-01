@@ -1,10 +1,10 @@
 import logging
 
-from app.src.core import SearchQuery
-from app.src.core.interfaces import BaseLanguageModel
-from app.src.core.interfaces.query_transformer import BaseQueryTransformer
+from app.src.core.interfaces.llm import BaseLanguageModel
+from app.src.core.interfaces.query import BaseQueryTransformer
+from app.src.core.search.search_query import SearchQuery
 from app.src.prompts.prompt_loader import PromptLoader
-from app.config.models.query_transformer import MultiQueryConfig
+from app.config.models.query import MultiQueryConfig
 
 logger = logging.getLogger(__name__)
 

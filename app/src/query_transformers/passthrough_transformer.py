@@ -1,5 +1,5 @@
-from app.src.core import SearchQuery
-from app.src.core.interfaces.query_transformer import BaseQueryTransformer
+from app.src.core.interfaces.query import BaseQueryTransformer
+from app.src.core.search.search_query import SearchQuery
 
 
 class PassthroughTransformer(BaseQueryTransformer):

@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+
 from app.src.core.domain.chunk import Chunk
 
 

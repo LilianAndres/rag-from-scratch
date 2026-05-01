@@ -1,7 +1,8 @@
-from app.src.core.interfaces import BaseLanguageModel
+from app.src.core.generation.generation_result import GenerationResult
 from app.src.core.interfaces.generator import BaseGenerator
+from app.src.core.interfaces.llm import BaseLanguageModel
+from app.src.core.search.search_result import SearchResult
 from app.src.prompts.prompt_loader import PromptLoader
-from app.src.core import GenerationResult, SearchResult
 from app.config.models.generator import GeneratorConfig
 
 

@@ -14,11 +14,7 @@ llms:
         max_tokens: 512
         timeout: 360.0
 
-resolvers:
-  local:
-    base_path: /tmp
-
-loaders:
+parsers:
   pdf:
     page_separator: "\n"
 

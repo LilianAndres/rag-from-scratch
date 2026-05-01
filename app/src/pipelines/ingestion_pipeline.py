@@ -1,39 +1,40 @@
-from pathlib import Path
+from itertools import islice
+from typing import Iterator
 
-from app.src.core.domain import Document, Chunk
-from app.src.routers.loader_router import DefaultLoaderRouter
-from app.src.routers.source_router import DefaultSourceRouter
+from app.src.core.domain.chunk import Chunk
+from app.src.core.domain.document import Document
+from app.src.core.domain.source import SourceDescriptor
 from app.src.core.interfaces.chunker import BaseChunker
 from app.src.core.interfaces.backend import SearchBackend
+from app.src.core.interfaces.parser import BaseParser
+from app.src.core.interfaces.source import BaseSourceResolver
+from app.src.registries.parser_registry import ParserRegistry
+from app.src.registries.resolver_registry import ResolverRegistry
 
 
 class IngestionPipeline:
 
     def __init__(
         self,
-        resolver: DefaultSourceRouter,
-        loader: DefaultLoaderRouter,
+        resolver_registry: ResolverRegistry,
+        parser_registry: ParserRegistry,
         chunker: BaseChunker,
         backend: SearchBackend,
     ):
-        self.resolver = resolver
-        self.loader = loader
+        self.resolver_registry = resolver_registry
+        self.parser_registry = parser_registry
         self.chunker = chunker
         self.backend = backend
 
-    async def ingest(self, sources: list[str]) -> None:
-        for source in sources:
-            path: Path = self.resolver.resolve(source)
-            docs: list[Document] = self.loader.load(path)
-            await self._ingest_documents(docs)
+    async def ingest(self, descriptors: list[SourceDescriptor]) -> None:
+        for descriptor in descriptors:
+            resolver: BaseSourceResolver = self.resolver_registry.resolve(descriptor)
+            for raw in resolver.discover(descriptor):
+                parser: BaseParser = self.parser_registry.resolve(raw)
+                await self._ingest_documents(parser.parse(raw))
 
-    async def _ingest_documents(self, documents: list[Document]) -> None:
-        chunks: list[Chunk] = self.chunker.chunk_many(documents)
-
-        if not chunks:
-            return
-
-        batch_size = 64
-        for i in range(0, len(chunks), batch_size):
-            batch = chunks[i:i + batch_size]
-            await self.backend.index(batch)
+    async def _ingest_documents(self, documents: Iterator[Document]) -> None:
+        while batch := list(islice(documents, 64)):
+            chunks: list[Chunk] = self.chunker.chunk_many(batch)
+            if chunks:
+                await self.backend.index(chunks)

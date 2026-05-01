@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.src.core.domain import Chunk
+from app.src.core.domain.chunk import Chunk
 from app.src.core.embeddings.embedding import Embedding
 
 

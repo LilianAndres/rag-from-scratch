@@ -1,5 +1,5 @@
-from app.src.core.interfaces import BaseQueryTransformer
 from app.src.core.interfaces.backend import SearchBackend
+from app.src.core.interfaces.query import BaseQueryTransformer
 from app.src.core.interfaces.reranker import BaseReranker
 from app.src.core.interfaces.generator import BaseGenerator
 from app.src.core.search.search_query import SearchQuery
