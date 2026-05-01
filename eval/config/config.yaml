@@ -4,12 +4,6 @@ batch_size: 5
 
 top_k: 5
 
-providers:
-  ollama:
-    base_url: "http://localhost:11434"
-  infinity:
-    base_url: "http://localhost:7997"
-
 judge_llm:
   provider: ollama
   ollama:

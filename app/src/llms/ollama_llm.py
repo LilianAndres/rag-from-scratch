@@ -19,17 +19,15 @@ class OllamaClient(BaseLanguageModel):
 
     def complete(self, prompt: str) -> str:
         response = httpx.post(
-            f"{self._base_url}/api/chat",
+            f"{self._base_url}/chat/completions",
             json={
                 "model": self._model,
                 "messages": [{"role": "user", "content": prompt}],
                 "stream": False,
-                "options": {
-                    "temperature": self._temperature,
-                    "num_predict": self._max_tokens,
-                },
+                "temperature": self._temperature,
+                "max_tokens": self._max_tokens,
             },
             timeout=self._timeout,
         )
         response.raise_for_status()
-        return response.json()["message"]["content"]
+        return response.json()["choices"][0]["message"]["content"]

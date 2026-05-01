@@ -23,6 +23,7 @@ services:
       --model-id BAAI/bge-small-en-v1.5
       --model-id cross-encoder/ms-marco-MiniLM-L-6-v2
       --port 7997
+      --url-prefix /v1
 
 volumes:
   chroma_data:

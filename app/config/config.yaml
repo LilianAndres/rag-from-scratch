@@ -1,9 +1,3 @@
-providers:
-  ollama:
-    base_url: "http://localhost:11434"
-  infinity:
-    base_url: "http://localhost:7997"
-
 llms:
   profiles:
     fast:

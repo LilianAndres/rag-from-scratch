@@ -15,10 +15,15 @@ class ClientFactory:
                     api_key=self._settings.providers.openai.api_key.get_secret_value(),
                     base_url=self._settings.providers.openai.base_url,
                 )
-            case "infinity":
+            case "ollama":
                 return AsyncOpenAI(
-                    api_key="infinity",
-                    base_url=f"{self._settings.providers.infinity.base_url}/v1",
+                    api_key="ollama",
+                    base_url=f"{self._settings.providers.ollama.base_url}/v1",
+                )
+            case "infinity":
+                raise ValueError(
+                    "Infinity does not expose an OpenAI-compatible /v1 endpoint and cannot be used "
+                    "as a judge inference provider. Use an OpenAI-compatible provider instead."
                 )
             case _:
                 raise ValueError(f"Unknown provider: {provider!r}")

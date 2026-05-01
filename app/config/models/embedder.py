@@ -7,6 +7,11 @@ class OpenAIEmbedderConfig(BaseModel):
     batch_size: int = 512
 
 
+class OllamaEmbedderConfig(BaseModel):
+    model: str = "nomic-embed-text"
+    timeout: float = 30.0
+
+
 class InfinityEmbedderConfig(BaseModel):
     model: str = "BAAI/bge-small-en-v1.5"
     timeout: float = 30.0
@@ -15,4 +20,5 @@ class InfinityEmbedderConfig(BaseModel):
 class EmbedderConfig(BaseModel):
     provider: str = "infinity"
     openai: OpenAIEmbedderConfig | None = None
+    ollama: OllamaEmbedderConfig | None = None
     infinity: InfinityEmbedderConfig = InfinityEmbedderConfig()
