@@ -9,7 +9,7 @@ from eval.domain.eval_run import EvalRun
 from eval.domain.eval_sample import EvalSample
 from eval.factories.evaluator_factory import EvaluatorFactory
 from eval.reporters import build_reporters
-from eval.runner import run_pipeline_batch
+from eval.runner import run_pipeline
 from eval.utils.dateset_loader import load_dataset
 
 
@@ -33,7 +33,6 @@ def _config_snapshot(settings: EvalSettings) -> dict:
         "dataset": str(settings.dataset_path),
         "top_k": settings.top_k,
         "top_n": settings.top_n,
-        "batch_size": settings.batch_size,
         "judge_provider": provider,
         "judge_model": getattr(provider_cfg, "model", "?"),
     }
@@ -53,19 +52,16 @@ async def run(settings: EvalSettings) -> None:
 
     app_settings = AppSettings()
     pipeline = ApplicationFactory(app_settings).create_rag_pipeline()
-    print("  RAG pipeline ready")
-
-    print(f"\n  Running pipeline  [batch_size={settings.batch_size}]")
+    print("  RAG pipeline ready\n")
 
     def on_progress(done: int, total: int) -> None:
-        print(f"    {done}/{total}")
+        print(f"  Running pipeline  [{done}/{total}]")
 
-    outputs = await run_pipeline_batch(
+    outputs = await run_pipeline(
         pipeline=pipeline,
         samples=samples,
         top_k=settings.top_k,
         top_n=settings.top_n,
-        batch_size=settings.batch_size,
         on_progress=on_progress,
     )
 

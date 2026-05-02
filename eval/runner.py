@@ -29,29 +29,20 @@ async def _run_single(
     )
 
 
-async def run_pipeline_batch(
+async def run_pipeline(
     pipeline: RAGPipeline,
     samples: list[EvalSample],
     top_k: int,
     top_n: int | None,
-    batch_size: int,
     on_progress: Callable[[int, int], None] | None = None,
 ) -> list[PipelineOutput]:
-    """
-    Runs all samples through the pipeline in concurrent batches.
-    Order of returned outputs matches order of input samples.
-    """
     outputs: list[PipelineOutput] = []
     total = len(samples)
 
-    for i in range(0, total, batch_size):
-        batch = samples[i: i + batch_size]
-        results = await asyncio.gather(*[
-            _run_single(pipeline, sample, top_k, top_n)
-            for sample in batch
-        ])
-        outputs.extend(results)
+    for i, sample in enumerate(samples):
+        result = await _run_single(pipeline, sample, top_k, top_n)
+        outputs.append(result)
         if on_progress:
-            on_progress(min(i + batch_size, total), total)
+            on_progress(i + 1, total)
 
     return outputs

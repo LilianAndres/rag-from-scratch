@@ -27,7 +27,7 @@ class InfinityReranker(BaseReranker):
         if self._api_key is not None and self._api_key != "":
             headers["Authorization"] = f"Bearer {self._api_key.get_secret_value()}"
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=self._timeout) as client:
             response = await client.post(
                 f"{self._base_url}/rerank",
                 headers=headers,

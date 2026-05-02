@@ -4,6 +4,7 @@ from app.src.core.interfaces.reranker import BaseReranker
 from app.src.core.interfaces.generator import BaseGenerator
 from app.src.core.search.search_query import SearchQuery
 from app.src.core.generation.generation_result import GenerationResult
+from app.src.core.search.search_result import SearchResult
 
 
 class RAGPipeline:
@@ -23,9 +24,9 @@ class RAGPipeline:
     async def run(self, query: SearchQuery, top_n: int | None = None) -> GenerationResult:
         queries = [query]
         if self.transformer is not None:
-            queries = self.transformer.transform(query)
+            queries = await self.transformer.transform(query)
 
-        results = []
+        results: list[SearchResult] = []
         for q in queries:
             result = await self.backend.search(q)
             results.extend(result)
@@ -33,8 +34,8 @@ class RAGPipeline:
         seen = set()
         deduped = []
         for r in results:
-            if r.chunk_id not in seen:
-                seen.add(r.chunk_id)
+            if r.chunk.id not in seen:
+                seen.add(r.chunk.id)
                 deduped.append(r)
         results = deduped
 

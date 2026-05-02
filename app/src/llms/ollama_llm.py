@@ -18,7 +18,7 @@ class OllamaClient(BaseLanguageModel):
         self._base_url = provider.base_url
 
     async def complete(self, prompt: str) -> str:
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=self._timeout) as client:
             response = await client.post(
                 f"{self._base_url}/chat/completions",
                 json={

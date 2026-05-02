@@ -22,7 +22,6 @@ class EvalSettings(BaseSettings):
 
     dataset_path: Path
     results_dir: Path
-    batch_size: int = 5
 
     top_k: int = 5
     top_n: int | None = None
