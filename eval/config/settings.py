@@ -27,7 +27,7 @@ class EvalSettings(BaseSettings):
     top_k: int = 5
     top_n: int | None = None
 
-    providers: ProvidersConfig = ProvidersConfig() # shared configuration with app/
+    providers: ProvidersConfig = ProvidersConfig() # shared configuration model with app/
 
     judge_llm: LLMProfileConfig = LLMProfileConfig()
     judge_embeddings: EmbedderConfig = EmbedderConfig()

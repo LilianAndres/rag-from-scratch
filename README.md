@@ -247,10 +247,12 @@ No core changes required.
 
 ## 🧭 Going further
 
+- Add background ingestion jobs (async processing, status tracking, retry on failure)
+- Add transactional ingestion (atomic operation, consistency on failure)
 - Add more loaders (HTML, Markdown, APIs)
 - Add more providers (Anthropic, Google, etc.)
 - Add observability (logs, tracing)
-- Add guardrails layer (input, output)
+- Add guardrails middlewares (input, output)
 - Add CI/CD workflows (evaluation, Docker image)
 
 ---
