@@ -13,7 +13,7 @@ class BaseGenerator(ABC):
     """
 
     @abstractmethod
-    def generate(self, query: str, context: list[SearchResult]) -> GenerationResult:
+    async def generate(self, query: str, context: list[SearchResult]) -> GenerationResult:
         """
         Generate an answer for *query* grounded in *context*.
 

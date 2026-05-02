@@ -30,7 +30,15 @@ class RAGPipeline:
             result = await self.backend.search(q)
             results.extend(result)
 
+        seen = set()
+        deduped = []
+        for r in results:
+            if r.chunk_id not in seen:
+                seen.add(r.chunk_id)
+                deduped.append(r)
+        results = deduped
+
         if self.reranker is not None:
             results = await self.reranker.rerank(query.text, results, top_n)
 
-        return self.generator.generate(query.text, results)
+        return await self.generator.generate(query.text, results)

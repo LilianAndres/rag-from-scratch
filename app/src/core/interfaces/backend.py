@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from typing import Iterator
+
 from app.src.core.search.search_query import SearchQuery
 from app.src.core.search.search_result import SearchResult
 from app.src.core.domain.chunk import Chunk
@@ -7,7 +9,7 @@ from app.src.core.domain.chunk import Chunk
 class SearchBackend(ABC):
 
     @abstractmethod
-    async def index(self, chunks: list[Chunk]) -> None:
+    async def index(self, chunks: Iterator[Chunk]) -> None:
         """
         Index chunks into database.
 

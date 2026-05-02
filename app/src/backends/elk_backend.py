@@ -32,6 +32,7 @@ class ELKBackend(SearchBackend):
         self._password = config.password.get_secret_value()
         self._index_name: str = config.index_name
         self._client: AsyncElasticsearch | None = None
+        self._batch_size: int = config.batch_size
 
     def _get_client(self) -> AsyncElasticsearch:
         if self._client is None:
@@ -59,7 +60,7 @@ class ELKBackend(SearchBackend):
             for chunk in chunks
         ]
 
-        await async_bulk(self._client, docs)
+        await async_bulk(self._client, docs, chunk_size=self._batch_size)
 
     async def search(self, query: SearchQuery) -> list[SearchResult]:
         body = {

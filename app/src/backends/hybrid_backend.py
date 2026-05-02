@@ -1,5 +1,6 @@
 import asyncio
 from collections import defaultdict
+from typing import Iterator
 from uuid import UUID
 
 from app.src.core.interfaces.backend import SearchBackend
@@ -20,8 +21,9 @@ class HybridBackend(SearchBackend):
         self._backends = backends
         self._rrf_k = rrf_k
 
-    async def index(self, chunks: list[Chunk]) -> None:
-        await asyncio.gather(*(b.index(chunks) for b in self._backends))
+    async def index(self, chunks: Iterator[Chunk]) -> None:
+        materialised = list(chunks)
+        await asyncio.gather(*(b.index(iter(materialised)) for b in self._backends))
 
     async def search(self, query: SearchQuery) -> list[SearchResult]:
         all_results: list[list[SearchResult]] = list(await asyncio.gather(

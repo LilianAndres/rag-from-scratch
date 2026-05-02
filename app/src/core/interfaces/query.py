@@ -6,7 +6,7 @@ from app.src.core.search.search_query import SearchQuery
 class BaseQueryTransformer(ABC):
 
     @abstractmethod
-    def transform(self, query: SearchQuery) -> list[SearchQuery]:
+    async def transform(self, query: SearchQuery) -> list[SearchQuery]:
         """
         Transform a query into one or more retrieval queries.
 

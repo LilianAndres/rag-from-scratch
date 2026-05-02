@@ -7,7 +7,7 @@ class BaseLanguageModel(ABC):
     """
 
     @abstractmethod
-    def complete(self, prompt: str) -> str:
+    async def complete(self, prompt: str) -> str:
         """
         Send a fully rendered prompt and return the model's response.
 

@@ -20,10 +20,10 @@ class MultiQueryTransformer(BaseQueryTransformer):
         self._n_variants = config.n_variants
         self._prompt_template = config.prompt_template
 
-    def transform(self, query: SearchQuery) -> list[SearchQuery]:
+    async def transform(self, query: SearchQuery) -> list[SearchQuery]:
         prompt = self._prompt_loader.render(self._prompt_template, query=query, n=self._n_variants)
         try:
-            raw = self._llm.complete(prompt)
+            raw = await self._llm.complete(prompt)
             variants = self._parse_variants(raw)
         except Exception as e:
             logger.warning("Multi-query expansion failed, falling back to original: %s", e)

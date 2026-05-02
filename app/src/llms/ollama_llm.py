@@ -17,17 +17,18 @@ class OllamaClient(BaseLanguageModel):
         self._timeout = config.timeout
         self._base_url = provider.base_url
 
-    def complete(self, prompt: str) -> str:
-        response = httpx.post(
-            f"{self._base_url}/chat/completions",
-            json={
-                "model": self._model,
-                "messages": [{"role": "user", "content": prompt}],
-                "stream": False,
-                "temperature": self._temperature,
-                "max_tokens": self._max_tokens,
-            },
-            timeout=self._timeout,
-        )
-        response.raise_for_status()
-        return response.json()["choices"][0]["message"]["content"]
+    async def complete(self, prompt: str) -> str:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{self._base_url}/chat/completions",
+                json={
+                    "model": self._model,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "stream": False,
+                    "temperature": self._temperature,
+                    "max_tokens": self._max_tokens,
+                },
+                timeout=self._timeout,
+            )
+            response.raise_for_status()
+            return response.json()["choices"][0]["message"]["content"]

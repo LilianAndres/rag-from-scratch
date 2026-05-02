@@ -1,4 +1,4 @@
-from openai import OpenAI
+from openai import OpenAI, AsyncOpenAI
 
 from app.config.models.provider import OpenAIProviderConfig
 from app.config.models.llm import OpenAIProfileConfig
@@ -14,13 +14,13 @@ class OpenAIClient(BaseLanguageModel):
         self._model = config.model
         self._temperature = config.temperature
         self._max_tokens = config.max_tokens
-        self._client = OpenAI(
+        self._client = AsyncOpenAI(
             api_key=provider.api_key.get_secret_value(),
             base_url=provider.base_url,
         )
 
-    def complete(self, prompt: str) -> str:
-        response = self._client.chat.completions.create(
+    async def complete(self, prompt: str) -> str:
+        response = await self._client.chat.completions.create(
             model=self._model,
             messages=[{"role": "user", "content": prompt}],
             temperature=self._temperature,

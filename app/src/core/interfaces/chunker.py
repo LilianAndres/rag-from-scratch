@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Iterator
 
 from app.src.core.domain.document import Document
 from app.src.core.domain.chunk import Chunk
@@ -28,11 +29,6 @@ class BaseChunker(ABC):
             Ordered list of chunk documents derived from *document*.
         """
 
-    def chunk_many(self, documents: list[Document]) -> list[Chunk]:
-        """
-        Chunk multiple documents, flattening results into a single list.
-        """
-        chunks: list[Chunk] = []
+    def chunk_many(self, documents: Iterator[Document]) -> Iterator[Chunk]:
         for doc in documents:
-            chunks.extend(self.chunk(doc))
-        return chunks
+            yield from self.chunk(doc)

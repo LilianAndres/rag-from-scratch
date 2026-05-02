@@ -1,3 +1,5 @@
+from itertools import islice
+from typing import Iterator
 from uuid import UUID
 
 from chromadb import AsyncHttpClient, AsyncClientAPI
@@ -24,6 +26,7 @@ class ChromaBackend(SearchBackend):
         self._embedder = embedder
         self._client: AsyncClientAPI | None = None
         self._collection: AsyncCollection | None = None
+        self._batch_size: int = config.batch_size
 
     async def _get_collection(self) -> AsyncCollection:
         if self._collection is None:
@@ -37,28 +40,26 @@ class ChromaBackend(SearchBackend):
             )
         return self._collection
 
-    async def index(self, chunks: list[Chunk]) -> None:
-        if not chunks:
-            return
-
+    async def index(self, chunks: Iterator[Chunk]) -> None:
         collection = await self._get_collection()
 
-        texts = [chunk.content for chunk in chunks]
-        embeddings = await self._embedder.embed_texts(texts)
+        for batch in self._batched(chunks, self._batch_size):
+            texts = [chunk.content for chunk in batch]
+            embeddings = await self._embedder.embed_texts(texts)
+            ids = [str(chunk.id) for chunk in batch]
+            metadatas = [self._chunk_metadata(chunk, chunk_id) for chunk, chunk_id in zip(batch, ids)]
 
-        ids = [str(chunk.id) for chunk in chunks]
+            await collection.upsert(
+                ids=ids,
+                embeddings=embeddings,
+                documents=texts,
+                metadatas=metadatas,
+            )
 
-        metadatas = [
-            self._chunk_metadata(chunk, chunk_id)
-            for chunk, chunk_id in zip(chunks, ids)
-        ]
-
-        await collection.upsert(
-            ids=ids,
-            embeddings=embeddings,
-            documents=texts,
-            metadatas=metadatas,
-        )
+    @staticmethod
+    def _batched(it: Iterator[Chunk], size: int) -> Iterator[list[Chunk]]:
+        while batch := list(islice(it, size)):
+            yield batch
 
     async def search(self, query: SearchQuery) -> list[SearchResult]:
         collection = await self._get_collection()

@@ -32,6 +32,7 @@ backend:
     port: 8000
     collection_name: documents
     distance_function: cosine
+    batch_size: 128
 
 reranker:
   enabled: true

@@ -7,12 +7,14 @@ class ChromaConfig(BaseModel):
     port: int = 8000
     collection_name: str = "documents"
     distance_function: str = "cosine"
+    batch_size: int = 128
 
 class ELKConfig(BaseModel):
     hosts: list[str] = Field(default_factory=lambda: ["http://localhost:9200"])
     username: str | None = None
     password: SecretStr | None = None
     index_name: str = "documents"
+    batch_size: int = 128
 
 class HybridConfig(BaseModel):
     backends: list["BackendConfig"] = Field(default_factory=list)
