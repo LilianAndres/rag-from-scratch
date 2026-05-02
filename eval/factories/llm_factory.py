@@ -1,4 +1,5 @@
 from ragas.llms import InstructorBaseRagasLLM
+
 from eval.config.settings import EvalSettings
 
 
@@ -21,7 +22,7 @@ class JudgeLLMFactory:
             case "ollama":
                 client = AsyncOpenAI(
                     api_key="ollama",
-                    base_url=f"{self._settings.providers.ollama.base_url}",
+                    base_url=self._settings.providers.ollama.base_url,
                 )
                 model = cfg.ollama.model
             case _:

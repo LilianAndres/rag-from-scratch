@@ -39,7 +39,7 @@ reranker:
   provider: infinity
   infinity:
     model: cross-encoder/ms-marco-MiniLM-L-6-v2
-    top_n: 5
+    top_n: 3
     timeout: 120.0
 
 generator:
